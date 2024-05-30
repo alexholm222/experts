@@ -1,0 +1,130 @@
+.plan {
+    width: 100%;
+    min-height: 500px;
+    padding: 20px 16px;
+    box-sizing: border-box;
+    background-color: var(--color-bg-full);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transition: all 0.4s ease-in-out;
+    overflow: hidden;
+    position: relative;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.15px;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+
+    svg {
+        margin-right: 8px;
+        transform: scale(1);
+        transition: all 0.2s ease-in-out;
+    }
+
+    &_big {
+        svg {
+            transform: scale(1.2);
+        }
+    }
+}
+
+.switch {
+    width: 34px;
+    height: 20px;
+    border-radius: 40px;
+    background-color: var(--color-button-disabled);
+    box-sizing: border-box;
+    padding: 3px;
+    transition: all 0.2s;
+    cursor: pointer;
+
+    div {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background-color: #ffff;
+        transition: all 0.2s;
+    }
+
+    &_on {
+        background-color: var(--color-button-accent);
+
+        div {
+            transform: translateX(14px);
+        }
+    }
+}
+
+.text {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 140%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    opacity: 1;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+
+
+    h3 {
+        color: var(--color-text-secondary);
+        margin: 0 0 -20px;
+        padding: 0;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 140%;
+        position: relative;
+    }
+
+    &_big {
+
+        p,
+        h3 {
+            font-size: 20px;
+            line-height: 140%;
+        }
+    }
+
+    &_anim {
+        filter: blur(2px);
+        opacity: 0;
+    }
+
+    &_hiden {
+        position: absolute;
+        left: 0;
+        padding: 8px 16px;
+        top: 46px;
+        opacity: 0;
+        box-sizing: border-box;
+    }
+
+    &_load {
+        h3,
+        p {
+            opacity: 0;
+            transition: all 0.2s ease-in-out;
+        }
+
+    }
+}

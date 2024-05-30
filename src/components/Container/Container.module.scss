@@ -1,0 +1,23 @@
+.container {
+    width: calc(100% - 282px);
+    margin-left: 282px;
+    right: 0;
+    transition: all 0.2s ease-in-out;
+    padding: 40px;
+    box-sizing: border-box;
+
+    &_hidden {
+        width: calc(100% - 80px); 
+        margin-left: 80px; 
+    }
+
+    @media(max-width: 1620px) {
+        width: calc(100% - 214px);
+        margin-left: 214px;
+
+        &_hidden {
+            width: calc(100% - 80px); 
+            margin-left: 80px; 
+        }
+    }
+}

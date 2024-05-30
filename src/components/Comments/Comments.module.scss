@@ -1,0 +1,143 @@
+.comments {
+    background-color: var(--color-bg-card-inner);
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+
+    p {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 22px;
+        letter-spacing: 0.15px;
+        min-width: 112px;
+        min-height: 22px;
+    }
+
+    button {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 18px;
+        letter-spacing: 0.056px;
+        color: var(--color-button-accent);
+        transition: all 0.2s;
+        cursor: pointer;
+        min-width: 94px;
+        min-height: 18px;
+
+        &:hover {
+            color: var(--color-button-accent-hover);
+        }
+    }
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    max-height: 0;
+    height: auto;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    transition: all 0.4s;
+
+    &_anim {
+        max-height: 700px;
+    }
+
+    &_hiden {
+        width: 100%;
+        left: 0;
+        top: 0;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        list-style-type: none;
+        visibility: hidden;
+        padding: 0;
+        margin: 0;
+
+    }
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 8px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    /* background-color: var( --color-bg-daily); */
+
+    &_hidden {
+        position: absolute;
+        z-index: -1;
+        left: 0;
+        top: 0;
+        visibility: hidden;
+    }
+
+    p {
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 22px;
+        position: relative;
+    }
+
+    span {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 18px;
+        color: var(--color-text-secondary);
+        position: relative;
+        max-width: 80px;
+    }
+}
+
+.new {
+    gap: 0;
+    height: fit-content;
+    height: 0;
+    padding: 0 8px;
+    flex-shrink: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.35s ease-in-out;
+    filter: blur(1px);
+
+    &_anim {
+        padding: 8px;
+        opacity: 1;
+        gap: 2px;
+        margin-bottom: 8px;
+        filter: blur(0);
+    }
+}
+
+.loader {
+    position: relative;
+}
+
+.hiden {
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+}

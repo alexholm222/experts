@@ -1,0 +1,131 @@
+.clientsList {
+    width: 100%;
+    filter: blur(0.5px);
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+
+
+    &_anim {
+        filter: blur(0);
+    }
+}
+
+
+.header {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    height: 46px;
+    overflow: hidden;
+    filter: blur(0);
+    opacity: 1;
+    transition: all 0.25s;
+
+    &_hiden {
+        height: 0;
+        opacity: 0;
+        margin: 0;
+        filter: blur(1px);
+    }
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    height: 46px;
+    padding: 5px;
+    box-sizing: border-box;
+    background-color: var(--color-bg-card);
+    border-radius: 8px;
+}
+
+.tab {
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    user-select: none;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    overflow: hidden;
+
+    sup {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 18px;
+        color: var(--color-text-secondary);
+        opacity: 0.5;
+        margin-left: 4px;
+        margin-top: 6px;
+        transition: all 0.2s;
+    }
+
+    &:hover {
+        background-color: var(--color-tab-header-hover);
+    }
+
+    &_active {
+        color: var(--color-text-primary);
+        background-color: var(--color-bg-daily);
+
+        sup {
+            opacity: 0.8;
+        }
+
+        &:hover {
+            background-color: var(--color-bg-daily);
+        }
+    }
+
+    &_disabled {
+        pointer-events: none;
+        p {
+            opacity: 0.6;
+        }
+    }
+
+    &_hidden {
+        padding: 0;
+        width: 0;
+        margin-left: -8px;
+
+    }
+
+}
+
+.search {
+    width: 100%;
+    max-width: 300px;
+    flex-shrink: 500;
+    box-sizing: border-box;
+    background-color: var(--color-bg-card);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 8px;
+
+    input {
+        width: 100%;
+        /*    pointer-events: none; */
+        background: none;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 22px;
+        user-select: none;
+        color: var(--color-text-primary);
+
+        &::placeholder {
+            color: var(--color-text-secondary);
+            opacity: 0.5;
+        }
+    }
+
+    svg path {
+        fill: var(--color-text-secondary);
+    }
+}

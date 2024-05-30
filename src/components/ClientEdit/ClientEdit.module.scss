@@ -1,0 +1,162 @@
+.edit {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+
+    input {
+        box-sizing: border-box;
+        width: 100%;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 22px;
+        background: none;
+        border: none;
+        color: var(--color-text-primary);
+
+        &::placeholder {
+            color: var(--color-button-disabled);
+        }
+    }
+}
+
+.sub {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    color: var(--color-text-secondary);
+    margin-bottom: 6px;
+}
+
+.container_city {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+    height: 46px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--color-bg-card);
+    border-radius: 4px;
+
+    &_open {
+        svg {
+            transform: rotate(180deg);
+        }
+    }
+
+    svg {
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    svg path {
+        fill: var(--color-button-disabled);
+    }
+}
+
+.block {
+    width: 100%;
+    position: relative;
+}
+
+.list {
+    position: absolute;
+    left: 0;
+    top: 44px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 0;
+    transition: max-height 0.2s ease-in-out, height 0.2s ease-in-out;
+    background-color: var(--color-bg-card);
+    z-index: 12;
+    border-radius: 0 0 4px 4px;
+    max-height: 0;
+    height: fit-content;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+
+    &_open {
+        max-height: 266px;
+        box-shadow: var( --box-shadow2);
+    }
+
+    &_scroll {
+        overflow-y: scroll;
+    }
+}
+
+.item {
+    width: 100%;
+    padding: 8px 14px;
+    box-sizing: border-box;
+    cursor: pointer;
+    line-height: 22px;
+
+    &:hover {
+        background-color: var(--color-button-disabled);
+    }
+}
+
+.listTel {
+    display: flex;
+    flex-direction: column;
+}
+
+.button {
+    font-weight: 500;
+    line-height: 140%;
+    letter-spacing: 0.15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    cursor: pointer;
+    transition: color 0.15s, height 0.4s ease-in-out, opacity 0.4s ease-in-out;
+    overflow: hidden;
+
+    &_add {
+        font-size: 14px;
+        margin: 16px 0 20px;
+        height: 20px;
+        gap: 6px;
+        color: var(--color-button-accent);
+
+        svg path {
+            transition: all 0.15s;
+            fill: var(--color-button-accent);
+        }
+
+        &:hover {
+            color: var(--color-button-accent-hover);
+
+            svg path {
+                fill: var(--color-button-accent-hover);
+            }
+        }
+    }
+
+    &_save {
+        height: 48px;
+        background-color: #002CFB;
+        font-size: 16px;
+        color: #ECECEC;
+        border-radius: 4px;
+
+        &:hover {
+            background-color: #0028E5;
+        }
+    }
+
+    &_hiden {
+        height: 0;
+        opacity: 0;
+    }
+}

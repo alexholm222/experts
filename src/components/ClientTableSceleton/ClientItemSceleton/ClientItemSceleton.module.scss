@@ -1,0 +1,212 @@
+.item {
+    display: flex;
+    height: 56px;
+}
+
+
+
+.empty {
+    width: 34px;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    flex-shrink: 0;
+}
+
+.client {
+    width: 260px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 12px;
+    flex-shrink: 0;
+    text-wrap: nowrap;
+}
+
+.name {
+    width: 80px;
+    height: 14px;
+}
+
+.city {
+    width: 110px;
+    height: 14px;
+}
+.task {
+    width: 150px;
+    display: flex;
+    align-items: center;
+    padding: 16px 12px;
+    flex-shrink: 0;
+    gap: 8px;
+
+    div {
+        width: 60px;
+        height: 14px;
+    }
+}
+
+.zoom {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background-color: var(--color-bg-card-inner);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg path {
+        fill: var(--color-button-accent);
+    }
+}
+
+.step {
+    width: 384px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 12px;
+    flex-shrink: 0;
+
+    span {
+        margin-left: 6px;
+        margin-bottom: 4px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 18px;
+        opacity: 0.7;
+    }
+}
+
+.steptext {
+    height: 14px;
+    width: 160px;
+}
+
+.bars {
+    width: 100px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.bar {
+    border-radius: 100px;
+    width: 100%;
+    height: 8px;
+}
+
+.comment {
+    max-width: 514px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 16px 12px;
+    gap: 4px;
+    flex-shrink: 500;
+
+    div {
+        height: 14px;
+        width: 100%;
+    }
+
+  
+}
+
+.text {
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 95%;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    color: var(--color-text-secondary);
+}
+
+.tooltip {
+    position: absolute;
+    top: -42px;
+    max-width: 504px;
+    width: fit-content;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    background-color: var(--color-bg-card);
+    box-shadow: var(--box-shadow2);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    color: var(--color-text-secondary);
+    border-radius: 4px;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.2s ease-in-out;
+
+    &_open {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    div {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: inherit;
+        left: 50%;
+        bottom: -5px;
+        transform: rotate(45deg);
+    }
+}
+
+.favorite {
+    width: 58px;
+    display: flex;
+    align-items: center;
+    padding: 16px 12px;
+    flex-shrink: 0;
+    position: relative;
+    opacity: 1;
+    transition: all 0.15s ease-in-out;
+
+    svg {
+        cursor: pointer;
+        transition: all 0.25s;
+    }
+
+    &_hiden {
+        opacity: 0;
+    }
+}
+
+
+.icon {
+    opacity: 0;
+    position: relative;
+    width: 22px;
+    height: 22px;
+
+    &_2 {
+
+        position: absolute;
+        margin-top: 2px;
+        opacity: 0;
+        transition: opacity 0.1s;
+
+        path {
+            fill: #ADBFDF
+                /* var(--color-button-accent) */
+            ;
+        }
+
+        &:hover {
+            fill: var(--color-button-accent-hover);
+        }
+    }
+
+    &_active {
+        opacity: 1;
+        z-index: 1;
+
+
+    }
+}

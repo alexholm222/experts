@@ -1,0 +1,161 @@
+.client {
+    background-color: var(--color-bg-card-inner);
+    border-radius: 8px;
+    width: 100%;
+    transition: all 0.4s ease-in-out;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 12px 20px 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.block {
+    display: flex;
+    gap: 20px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border-radius: 4px;
+    position: relative;
+
+    p {
+        position: relative;
+        z-index: 0;
+        width: fit-content;
+    }
+
+    &:hover {
+        background-color: var(--color-bg-daily);
+    }
+
+    &:hover svg {
+        opacity: 1;
+    }
+
+    svg {
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+}
+
+.icon_close {
+    position: absolute;
+    top: 8px;
+    right: 0;
+    padding-right: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    transition: all 0.5s ease-in-out;
+
+    svg {
+        width: 18px;
+        margin-top: 2px;
+        height: 18px;
+        transform: translateX(0) scale(1);
+        transition: all 0.3s ease-in-out;
+    }
+}
+
+.icon_edit {
+    position: absolute;
+    top: 8px;
+    right: 0;
+    padding-right: 10px;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+
+    svg {
+        transform: translateX(0) scale(1);
+        transition: all 0.3s ease-in-out;
+    }
+
+}
+
+.hidden {
+    opacity: 0;
+    svg {
+        transform: /* translateX(100px)  */scale(0.1);
+    }
+}
+
+.city {
+    color: var(--color-text-secondary);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+
+    sup {
+        font-size: 12px;
+        line-height: 14px;
+        margin-left: 4px;
+    }
+}
+
+.name {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+}
+
+.favorite {
+    margin-top: 8px;
+    position: relative;
+
+    svg {
+        cursor: pointer;
+        transition: all 0.25s;
+    }
+}
+
+.icon {
+    opacity: 0;
+    position: relative;
+
+    &:hover {
+        opacity: 0.6;
+    }
+
+    &_2 {
+        position: absolute;
+        top: 2px;
+        left: 1px;
+        opacity: 0;
+        transition: opacity 0.15s ease-in-out;
+
+        path {
+            fill: #ADBFDF/* var(--color-button-accent) */;
+        }
+
+        &:hover {
+            fill: var(--color-button-accent-hover);
+        }
+    }
+
+    &_active {
+        opacity: 1;
+        z-index: 1;
+
+
+    }
+}
+
+.loader {
+    position: relative;
+}
+
+.hiden {
+   opacity: 0;
+   transition: all 0.2s ease-in-out;
+}

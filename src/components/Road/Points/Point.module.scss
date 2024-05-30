@@ -1,0 +1,16 @@
+.point_check {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    transition: all 0.7s ease-in-out;
+
+   &_big {
+    transform: scale(1.2);
+   }
+}
+
+.container {
+    position: absolute;
+    top: -18.8px;
+    left: -18.8px;
+}
