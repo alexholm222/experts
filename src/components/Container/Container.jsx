@@ -8,8 +8,8 @@ const Container = ({ sidebarHiden }) => {
     return (
         <div className={`${s.container} ${sidebarHiden && s.container_hidden}`}>
             <Routes>
-                <Route path="*" element={<Work sidebarHiden={sidebarHiden} />} />
-                  <Route path="/expert/clients/" element={<Clients />} />
+               {/*  <Route path="*" element={<Work sidebarHiden={sidebarHiden} />} /> */}
+                <Route path="*"  /* path="/expert/clients/"  */element={<Clients />} />
             </Routes>
         </div>
     )

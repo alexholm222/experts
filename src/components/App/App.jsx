@@ -213,7 +213,7 @@ const App = () => {
 
     return (
         <div className={s.app}>
-            <SideBar sidebarHiden={sidebarHiden} setSideBarHiden={setSideBarHiden} path={path} activePoint={activePoint} />
+           {/*  <SideBar sidebarHiden={sidebarHiden} setSideBarHiden={setSideBarHiden} path={path} activePoint={activePoint} /> */}
             <Container sidebarHiden={sidebarHiden} />
         </div>
     )
