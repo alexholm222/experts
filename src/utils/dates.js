@@ -86,8 +86,9 @@ export const handleDateDifference = (d) => {
     const month2 = date2.getMonth();
     const year2 = date2.getFullYear();
     const diffDays = Math.ceil((date - date2) / (1000 * 60 * 60 * 24));
+    console.log(d, diffDays)
 
-    if(!d) {
+    if(!d || d == '0000-00-00 00:00:00') {
         return ''
     }
 

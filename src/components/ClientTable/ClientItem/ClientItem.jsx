@@ -31,11 +31,11 @@ const ClientItem = ({ client, id }) => {
     const [lastRoadDate, setLastRoadDate] = useState('');
     const [lastComment, setLastComment] = useState('');
     const [status, setStatus] = useState(0);
-    const [statusText, setStatusText] = useState('Ознакомился с бизнес-планом');
+    const [statusText, setStatusText] = useState('');
     const [missedCall, setMissedCall] = useState(false);
     const dispatch = useDispatch();
     const updater = useSelector(selectorUpdater);
-
+    console.log(client)
     //Бизнес-план (1): - Сформирован бизнес-план (1) ClientOpenPlan
     //запись на ZOOM (2): - Клиент запросил Zoom(2.1) ReqZoom,  Запись на Zoom-встречу (2.2) ClientZoomSet
     //ZOOM (3): - Проведена встреча Zoom (3.2) ClientZoomFinish,  Zoom не состоялся (3.1) - парсим дату записи на ZOOM и сравниваем с текущей датой если текущая дата больше берем этот статус и последний статус < 3.2
@@ -59,7 +59,7 @@ const ClientItem = ({ client, id }) => {
     }, [client])
 
     useEffect(() => {
-        const comment = client.partnership_client_logs?.filter(el => el.is_manual == 1).at(-1)?.comment;
+        const comment = client.partnership_client_logs?.filter(el => el.is_manual == 1 && el.type !== 'newsletter_action').at(-1)?.comment;
         comment && setLastComment(comment)
     }, [client])
 
@@ -129,7 +129,7 @@ const ClientItem = ({ client, id }) => {
 
         if (lastRoad?.type == 'ClientContractSign') {
             setStatus(6.2);
-            setStatusText('Договор');
+            setStatusText('Договор подписан');
             return
         }
 

@@ -7,8 +7,8 @@ const ClientsTable = ({ clients, activeTab, activeTabList }) => {
     const [sortClients, setSortClients] = useState(clients)
 
     useEffect(() => {
-        const newClients = [...clients];
-        newClients.sort(function (a, b) {
+        const clientSort = [...clients];
+        clientSort.sort(function (a, b) {
             const dateA = new Date(a?.next_connect);
             const dateB = new Date(b?.next_connect);
             if (dateA > dateB) {
@@ -19,7 +19,18 @@ const ClientsTable = ({ clients, activeTab, activeTabList }) => {
                 return -1
             }
         })
-        setSortClients(newClients)
+
+        clientSort.sort(function(a, b) {
+            if (a.events_call < b.events_call) {
+                return 1
+            }
+
+            if (a.events_call > b.events_call) {
+                return -1
+            }
+        })
+
+        setSortClients(clientSort)
     }, [clients])
 
     return (

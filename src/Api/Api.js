@@ -7,7 +7,7 @@ const instanceWithToken = axios.create({
     baseURL: baseUrl
 })
 
-const token = document.getElementById('root-expert').getAttribute('token');
+const token = document.getElementById('root_expert').getAttribute('token');
 
 instanceWithToken.interceptors.request.use(config => {
     config.headers.Authorization = token

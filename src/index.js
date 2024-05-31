@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './components/App/App';
 
 
-const root = ReactDOM.createRoot(document.getElementById('root-expert'));
+const root = ReactDOM.createRoot(document.getElementById('root_expert'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
