@@ -9,8 +9,8 @@ const ClientTableSceleton = ({load}) => {
         <div className={`${s.table} ${load && s.table_load}`}>
            
             <ul className={s.list}>
-                {[...Array(14)].map(el => {
-                    return  <ClientItemSceleton/>
+                {[...Array(14)].map((el, i) => {
+                    return  <ClientItemSceleton key={i}/>
                 })}
             </ul>
         </div>

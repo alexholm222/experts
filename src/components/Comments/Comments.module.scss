@@ -7,6 +7,15 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    min-height: 137px;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+
+    &_hiden {
+        min-height: 0;
+        height: 0;
+        padding: 0;
+    }
 }
 
 .header {
@@ -49,7 +58,7 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    transition: all 0.4s;
+    transition: all 0.35s ease-in-out;
 
     &_anim {
         max-height: 700px;
@@ -65,7 +74,7 @@
         list-style-type: none;
         visibility: hidden;
         padding: 0;
-        margin: 0;
+        margin: 38px 0 0;
 
     }
 }
@@ -108,7 +117,7 @@
         line-height: 18px;
         color: var(--color-text-secondary);
         position: relative;
-        max-width: 80px;
+        max-width: 180px;
     }
 }
 

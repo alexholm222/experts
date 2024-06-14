@@ -1,0 +1,47 @@
+.container {
+    width: 100%;
+    background-color: var(--color-bg-card);
+    border-radius: 8px;
+    padding: 12px;
+    height: 68px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+}
+
+.time {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    height: fit-content;
+
+    &_1 {
+        width: 40px;
+        height: 14px;
+    }
+
+    &_2 {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    line-height: 22px;
+
+    &_1 {
+        margin-top: 6px;
+        width: 90px;
+        height: 14px;
+    }
+
+    &_2 {
+        width: 70px;
+        height: 12px;
+    }
+    
+}

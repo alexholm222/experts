@@ -52,6 +52,8 @@
     &_scenario {
         grid-area: scenario;
         align-self: flex-start;
-        height: 800px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
     }
 }

@@ -18,10 +18,10 @@
   box-sizing: border-box;
   transform: translateX(-400px);
   transition: transform 0.4s ease-in-out;
-  transition: transform 0.4s ease-in-out,  width 0.25s, padding 0.25s; 
+  transition: transform 0.4s ease-in-out, width 0.25s, padding 0.25s;
 
   &_anim {
-   transform: translateX(0);
+    transform: translateX(0);
   }
 
   @media(max-width: 1680px) {
@@ -76,8 +76,8 @@
 }
 
 .logo {
-  background-image: url(../../image/sideBar/Logo-Skilla.png);
-  height: 30px;
+  background-image: url(../../image/sideBar/Logo-Skilla2.png);
+  height: 34px;
   width: 100%;
   background-size: contain;
   background-repeat: no-repeat;
@@ -256,7 +256,7 @@
   &_rank {
     font-size: 14px;
     line-height: 16px;
-    margin-bottom: 16px;
+    /*   margin-bottom: 16px; */
     min-width: 60px;
   }
 
@@ -334,7 +334,7 @@
   color: #9397A6;
   overflow: hidden;
   margin-bottom: 4px;
- 
+
 
   @media(max-width: 1620px) {
     padding: 4px 6px;
@@ -365,8 +365,6 @@
   &_tel_active {
     background-color: #202E43;
     color: #ECECEC;
-
-
   }
 
   svg path {
@@ -394,6 +392,14 @@
 
   &:hover {
     background-color: #202E43;
+  }
+
+  &_overlay {
+
+    &_dis {
+      pointer-events: none;
+      opacity: 0.8;
+    }
 
   }
 
@@ -418,6 +424,6 @@
 }
 
 .hiden {
- opacity: 0;
- transition: opacity 0.2s ease-in-out;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
 }

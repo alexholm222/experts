@@ -1,0 +1,40 @@
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--color-bg-full);
+    border-radius: 12px;
+
+    &_today {
+        background-color: rgba(0, 44, 251, 0.06);
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px 8px;
+    height: 42px;
+    box-sizing: border-box;
+}
+
+.sub {
+ width: 80px;
+ height: 16px;
+}
+
+.day {
+    width: 70px;
+    height: 12px;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 12px 24px;
+    margin: 0;
+}

@@ -5,19 +5,31 @@ import { Link } from 'react-router-dom';
 import avatar from '../../image/avatar.png';
 import { ReactComponent as MenuWorkIcon } from '../../image/sideBar/menuWork.svg';
 import { ReactComponent as MenuClientsIcon } from '../../image/sideBar/menuClients.svg';
+//Api
+import { getManagerInfo } from '../../Api/Api';
 //components
 import LoaderSide from '../Loader/LoaderSide';
 import LoaderAvatar from '../Loader/LoaderAvatar';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectorApp } from '../../store/reducer/App/selector';
+import WidgetSideBar from '../WidgetSideBar/WidgetSideBar';
+//selector
+import { selectorClient } from '../../store/reducer/Client/selector';
+import { selectorExpert } from '../../store/reducer/Expert/selector';
+//slice
+import { setExpert } from '../../store/reducer/Expert/slice';
+import { setLoadManager } from '../../store/reducer/App/slice';
 
 const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
+  const expertInfo = useSelector(selectorExpert).expert;
   const [anim, setAnim] = useState(false);
   const [loadClose, setLoadClose] = useState(true);
   const [loadVisible, setLoadVisible] = useState(true);
   const loadPage = useSelector(selectorApp).loadPage;
   const loadManager = useSelector(selectorApp).loadManager;
-
+  const client_id = useSelector(selectorClient).client_id;
+  const dispatch = useDispatch();
+  console.log(expertInfo)
   //Лоадер для сайдбара (инфо о менеджере)
   useEffect(() => {
     if (!loadPage && !loadManager) {
@@ -37,6 +49,18 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
     })
   }, []);
 
+
+  useEffect(() => {
+    getManagerInfo()
+    .then(res => {
+      const data = res.data.data; 
+      const expert = {name: data.name, surname: data.surname, avatar: data.avatar}
+      console.log(res)
+      dispatch(setExpert(expert));
+      dispatch(setLoadManager(false));
+    })
+    .catch(err => console.log(err))
+  }, []);
 
 
   const handleSideBar = () => {
@@ -60,7 +84,7 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
             <div className={`${s.overlay} ${sidebarHiden && s.overlay_hiden}`}>
               {loadClose ? <LoaderAvatar load={loadPage} /> :
                 <img
-                  src={avatar}
+                  src={expertInfo?.avatar ? expertInfo?.avatar : avatar}
                   className={`${s.avatar} ${sidebarHiden && s.avatar_hiden}`}>
                 </img>}
             </div>
@@ -73,15 +97,15 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
 
           </div>
           <div className={s.loader}>
-            <p className={`${s.text} ${s.text_name} ${sidebarHiden && s.text_hiden} ${loadClose && s.hiden}`}>Леха</p>
+            <p className={`${s.text} ${s.text_name} ${sidebarHiden && s.text_hiden} ${loadClose && s.hiden}`}>{expertInfo?.name}</p>
             {loadClose && <LoaderSide load={loadVisible} />}
           </div>
           <div className={s.loader}>
-            <p className={`${s.text} ${s.text_rank} ${sidebarHiden && s.text_hiden} ${loadClose && s.hiden}`}>лох</p>
+            <p className={`${s.text} ${s.text_rank} ${sidebarHiden && s.text_hiden} ${loadClose && s.hiden}`}>{expertInfo?.surname}</p>
             {loadClose && <LoaderSide load={loadVisible} />}
           </div>
 
-          <div className={s.box}>
+          {/*  <div className={s.box}>
             <div className={`${s.bar} ${sidebarHiden && s.bar_hiden}`}>
               {[...Array(6)].map((el, i) =>
                 <div className={s.item}></div>
@@ -93,19 +117,22 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
                 {loadClose && <LoaderSide load={loadVisible} />}
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className={`${s.react} ${sidebarHiden && s.react_hiden}`}>
+          {/*  <div className={`${s.react} ${sidebarHiden && s.react_hiden}`}>
 
-          </div>
+          </div> */}
         </div>
         <ul className={`${s.menu} ${sidebarHiden && s.menu_hiden}`}>
-          <Link to={'/expert/work'}>
-            <li className={`${s.point} ${s.point_tel} ${sidebarHiden && s.point_hiden} ${activePoint == 1 && s.point_tel_active}`}>
-              <MenuWorkIcon />
-              <p className={`${s.point_text} ${sidebarHiden && s.point_text_hiden}`}>Работа с клиентами</p>
-            </li>
-          </Link>
+          <div className={`${s.point_overlay} ${client_id == '' && s.point_overlay_dis}`}>
+            <Link to={ client_id == '' ? '/expert/clients' : '/expert/work'}>
+              <li className={`${s.point} ${s.point_tel} ${sidebarHiden && s.point_hiden} ${activePoint == 1 && s.point_tel_active}`}>
+                <MenuWorkIcon />
+                <p className={`${s.point_text} ${sidebarHiden && s.point_text_hiden}`}>Работа с клиентами</p>
+              </li>
+            </Link>
+          </div>
+
           <Link to={'/expert/clients'}>
             <li className={`${s.point} ${s.point_tel} ${sidebarHiden && s.point_hiden} ${activePoint == 2 && s.point_tel_active}`}>
               <MenuClientsIcon />
@@ -114,7 +141,7 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
           </Link>
         </ul>
       </div>
-      {/* <SideBarWidget menuNavStatus={menuNavStatus} /> */}
+      <WidgetSideBar sidebarHiden={sidebarHiden} />
     </div>
   );
 }

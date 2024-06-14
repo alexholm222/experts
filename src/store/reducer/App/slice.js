@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     loadPage: true,
-    loadManager: false,
-    loadClient: false,
+    loadManager: true,
+    loadClient: true,
 };
 
 const AppSlice = createSlice({

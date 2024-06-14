@@ -9,12 +9,12 @@ import App from './components/App/App';
 
 const root = ReactDOM.createRoot(document.getElementById('root_expert'));
 root.render(
-  <React.StrictMode>
+ /*  <React.StrictMode> */
     <Provider store={store}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
     </Provider>
-  </React.StrictMode>
+ /*  </React.StrictMode> */
 );
 

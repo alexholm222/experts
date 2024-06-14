@@ -2,18 +2,17 @@
     display: flex;
     cursor: pointer;
     box-sizing: border-box;
+    text-decoration: none;
     &:hover {
         background-color: var(--color-bg-full);
     }
-    a:active,
-    a:hover,
-    a {
         text-decoration: none;
         color: var(--color-text-primary);
-    }
+        text-und
+    
 
     &_attention {
-        background: linear-gradient(0deg, rgba(225, 13, 13, 0.03) 0%, rgba(225, 13, 13, 0.03) 100%), #FFF;
+        background: var(--color-attention-client);
     }
 }
 

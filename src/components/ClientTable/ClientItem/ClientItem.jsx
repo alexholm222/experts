@@ -6,6 +6,7 @@ import { ReactComponent as IconStar } from '../../../image/work/IconStar.svg';
 import { ReactComponent as IconStarActive } from '../../../image/work/IconStarActive.svg';
 import { ReactComponent as IconZoomSmall } from '../../../image/clients/iconZoomSmall.svg';
 import { ReactComponent as IconMissingCall } from '../../../image/clients/iconMissingCall.svg';
+import { useNavigate  } from 'react-router-dom';
 //utils
 import { handleTaskTime, handleDateDifference } from '../../../utils/dates';
 import { addSpaceNumber } from '../../../utils/addSpaceNumber';
@@ -19,11 +20,14 @@ import {
     setUpdateNoFavorites,
     setDeleteUpdateNoFavorites
 } from '../../../store/reducer/Updater/slice';
+import { setClientId } from '../../../store/reducer/Client/slice';
 //selector
 import { selectorUpdater } from '../../../store/reducer/Updater/selector';
+import { selectorClient } from '../../../store/reducer/Client/selector';
 
 
 const ClientItem = ({ client, id }) => {
+    const client_id = useSelector(selectorClient).client_id;
     const [anim, setAnim] = useState(false);
     const [tooltip, setTooltip] = useState(false);
     const [favorite, setFavorite] = useState(false);
@@ -35,7 +39,7 @@ const ClientItem = ({ client, id }) => {
     const [missedCall, setMissedCall] = useState(false);
     const dispatch = useDispatch();
     const updater = useSelector(selectorUpdater);
-    console.log(client)
+    const navigate = useNavigate();
     //Бизнес-план (1): - Сформирован бизнес-план (1) ClientOpenPlan
     //запись на ZOOM (2): - Клиент запросил Zoom(2.1) ReqZoom,  Запись на Zoom-встречу (2.2) ClientZoomSet
     //ZOOM (3): - Проведена встреча Zoom (3.2) ClientZoomFinish,  Zoom не состоялся (3.1) - парсим дату записи на ZOOM и сравниваем с текущей датой если текущая дата больше берем этот статус и последний статус < 3.2
@@ -69,7 +73,7 @@ const ClientItem = ({ client, id }) => {
             el.type == 'ClientZoomFinish' || el.type == 'SendForm' ||
             el.type == 'ClientAnketaAccept' || el.type == 'ContractСancelled' ||
             el.type == 'ClientContractSign' || el.type == 'ClientPrepaid');
-
+        console.log(cleanRoad)
         const lastRoad = cleanRoad?.at(-1);
         setLastRoadDate(lastRoad?.date);
 
@@ -218,36 +222,44 @@ const ClientItem = ({ client, id }) => {
         setViewFavorite(false)
     }
 
+    const handleOpenClient = () => {
+        dispatch(setClientId(id));
+        localStorage.setItem('client_id', JSON.stringify(id));
+        navigate(`/expert/work`);
+        if (client_id !== id) {
+            localStorage.removeItem('widget');
+            localStorage.removeItem('comment');
+            localStorage.removeItem('tab');
+            localStorage.removeItem('sms');
+            return
+        }
+    }
+
     return (
         <div id={id} onMouseEnter={handleViewFavorite} onMouseLeave={handleHidenFavorite} className={`${s.item} ${anim && s.item_anim} ${missedCall && s.item_attention}`}>
-            <a href={`https://lk.skilla.ru/frmanager/req/?id=${id}`}>
-                <div className={s.empty}>
+         
+                <div onClick={handleOpenClient} className={s.empty}>
                     {missedCall && <IconMissingCall />}
                 </div>
-            </a>
-            <a href={`https://lk.skilla.ru/frmanager/req/?id=${id}`}>
-                <div className={s.client}>
-                    <p>{client.name}</p> <span>{client.city}</span>
-                </div>
-            </a>
+           
 
-            <a href={`https://lk.skilla.ru/frmanager/req/?id=${id}`}>
-                <div className={s.task}>
+           
+                <div onClick={handleOpenClient} className={s.client}>
+                    <p>{client.name}</p> <span>{client.city == '' ? client.city_auto : client.city}</span>
+                </div>
+        
+                <div onClick={handleOpenClient} className={s.task}>
                     <p>{handleTaskTime(client.next_connect)}</p>
                     {client.next_connect == client.zoom_date && <div className={s.zoom}>
                         <IconZoomSmall />
                     </div>}
                 </div>
-            </a>
-
-            <a href={`https://lk.skilla.ru/frmanager/req/?id=${id}`}>
-                <div className={s.task}>
+         
+                <div onClick={handleOpenClient} className={s.task}>
                     <p>{handleDateDifference(client.last_connect)}</p> <span></span>
                 </div>
-            </a>
-
-            <a href={`https://lk.skilla.ru/frmanager/req/?id=${id}`}>
-                <div className={s.step}>
+        
+                <div onClick={handleOpenClient} className={s.step}>
                     <div className={s.bars}>
                         <div className={`${s.bar} ${status == 2.1 && s.bar_yellow} ${status >= 2.2 && s.bar_green}`}></div>
                         <div className={`${s.bar}  ${status >= 3.2 && s.bar_green}`}></div>
@@ -263,19 +275,19 @@ const ClientItem = ({ client, id }) => {
                     </div>
 
                 </div>
-            </a>
+           
 
-            <a className={s.comment_link} href={`https://lk.skilla.ru/frmanager/req/?id=${id}`}>
-                <div className={s.comment} onMouseEnter={handleOpenTooltip} onMouseLeave={handleCloseTooltip}>
-                    {lastComment !== '' && <IconComment />}
-                    <p className={s.text}>{lastComment}</p>
-                    {lastComment.length > 55 && <div className={`${s.tooltip} ${tooltip && s.tooltip_open}`}>
-                        <p>{lastComment}</p>
-                        <div></div>
-                    </div>
-                    }
+            <div onClick={handleOpenClient} className={s.comment} onMouseEnter={handleOpenTooltip} onMouseLeave={handleCloseTooltip}>
+                {lastComment !== '' && <IconComment />}
+                <p className={s.text}>{lastComment}</p>
+                {lastComment.length > 55 && <div className={`${s.tooltip} ${tooltip && s.tooltip_open}`}>
+                    <p>{lastComment}</p>
+                    <div></div>
                 </div>
-            </a>
+                }
+            </div>
+
+
 
             <div className={`${s.favorite} ${!viewFavorite && !favorite && s.favorite_hiden}`}>
                 <IconStar onClick={handleFavorite} className={`${s.icon} ${!favorite && s.icon_active}`} />

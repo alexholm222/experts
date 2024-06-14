@@ -2,6 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     today: [],
+    todayNum: 0,
+    todayNextPage: '',
     new: [],
     no_task: [],
     archive: [],
@@ -29,7 +31,15 @@ const MyClientsSlice = createSlice({
 
     reducers: {
         setClientsToday(state, action) {
-            state.today = action.payload/* [...state.today, ...action.payload] */;
+            state.today = action.payload;
+        },
+
+        setClientsNum(state, action) {
+            state.todayNum = action.payload;
+        },
+
+        setTodayNextPage(state, action) {
+            state.todayNextPage = action.payload;
         },
 
         setClientsNew(state, action) {
@@ -124,6 +134,8 @@ const MyClientsSlice = createSlice({
 
 export const {
     setClientsToday,
+    setClientsNum,
+    setTodayNextPage,
     setLoadNew,
     setClientsNew,
     setClientsNoTask,

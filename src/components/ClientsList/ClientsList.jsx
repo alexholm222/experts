@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import s from './ClientsList.module.scss';
 import { ReactComponent as IconSearch } from '../../image/iconSearch.svg';
 import { useSelector } from 'react-redux';
@@ -9,10 +9,14 @@ import ClientTable from '../ClientTable/ClientsTable';
 import ClientTableSceleton from '../ClientTableSceleton/ClientTableSceleton';
 //utils
 import { handleFilterObject } from '../../utils/filter';
+//API 
+import { getMyClientsPagination } from '../../Api/Api';
 
 const ClientsList = ({ activeTab }) => {
     const myClients = useSelector(selectorMyClients);
     const clientsToday = myClients.today;
+    const clientsTodayNum = myClients.todayNum;
+    const clientsTodayPath = myClients.todayNextPage;
     const clientsNew = myClients.new;
     const noTask = myClients.no_task;
     const archive = myClients.archive;
@@ -27,7 +31,9 @@ const ClientsList = ({ activeTab }) => {
     const [clientsPrev, setClientsPrev] = useState([]);
     const [activeTabList, setActiveTabList] = useState(1);
     const [query, setQuery] = useState('');
-    console.log(favorite)
+    const throttleInProgress = useRef();
+    const listRef = useRef();
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -38,7 +44,6 @@ const ClientsList = ({ activeTab }) => {
 
     useEffect(() => {
         if (activeTab == 3) {
-            console.log('избранное', favorite)
             setClients(favorite);
             return
         }
@@ -90,6 +95,7 @@ const ClientsList = ({ activeTab }) => {
 
     }, [activeTabList, activeTab, clientsToday, clientsNew, noTask, archive, planMeeting, zoom, anketa, contract, prepaid, favorite]);
 
+
     const handleActiveTab = (e) => {
         const id = e.currentTarget.id;
         setActiveTabList(id);
@@ -107,9 +113,40 @@ const ClientsList = ({ activeTab }) => {
         setClientsPrev(clients)
     }
 
+    const handleNextPageLoad = () => {
+        if (activeTabList == 1 && clientsTodayPath) {
+            getMyClientsPagination(clientsTodayPath, 'today')
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => console.log(err))
+        }
+    }
+
+    const scrollLoad = () => {
+       /*  const load = listRef?.current?.getBoundingClientRect()?.bottom - window.innerHeight < 800;
+        load && handleNextPageLoad(); */
+    }
+
+    const handleThrottleScroll = () => {
+        if (throttleInProgress.current) {
+            return
+        }
+        throttleInProgress.current = true;
+        setTimeout(() => {
+            scrollLoad()
+            throttleInProgress.current = false;
+        }, 1800);
+    }
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleThrottleScroll);
+        return () => window.removeEventListener('scroll', handleThrottleScroll)
+    }, [activeTabList]);
+
     return (
         <>
-            <div className={`${s.clientsList} ${anim && s.clientsList_anim}`}>
+            <div ref={listRef} className={`${s.clientsList} ${anim && s.clientsList_anim}`}>
 
                 <div className={`${s.header} ${activeTab == 3 && s.header_hiden}`}>
                     <div className={s.search}>
@@ -117,8 +154,8 @@ const ClientsList = ({ activeTab }) => {
                         <input onFocus={handleWritePrevState} onChange={handleQuery} type='text' value={query || ''} placeholder='Искать...'></input>
                     </div>
                     <div className={s.tabs}>
-                        <div onClick={handleActiveTab} id='1' className={`${s.tab} ${activeTabList == 1 && s.tab_active} ${clientsToday.length == 0 && s.tab_disabled}`}>
-                            <p>Сегодня</p><sup>{clientsToday.length == 0 ? '' : clientsToday.length}</sup>
+                        <div onClick={handleActiveTab} id='1' className={`${s.tab} ${activeTabList == 1 && s.tab_active} ${clientsTodayNum == 0 && s.tab_disabled}`}>
+                            <p>Сегодня</p><sup>{clientsTodayNum == 0 ? '' : clientsTodayNum}</sup>
                         </div>
                         <div onClick={handleActiveTab} id='2' className={`${s.tab} ${activeTabList == 2 && s.tab_active} ${clientsNew.length == 0 && s.tab_disabled}`}>
                             <p>Новые</p><sup>{clientsNew.length == 0 ? '' : clientsNew.length}</sup>
@@ -146,7 +183,7 @@ const ClientsList = ({ activeTab }) => {
                         </div>
                     </div>
                 </div>
-                <ClientTable clients={clients} activeTab={activeTab} activeTabList={activeTabList}/>
+                <ClientTable clients={clients} activeTab={activeTab} activeTabList={activeTabList} />
             </div>
             {activeTabList == 1 && <ClientTableSceleton load={myClients.loadToday} />}
             {activeTabList == 2 && <ClientTableSceleton load={myClients.loadNew} />}

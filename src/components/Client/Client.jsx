@@ -5,9 +5,12 @@ import { ReactComponent as IconStarActive } from '../../image/work/IconStarActiv
 import { ReactComponent as IconClose } from '../../image/iconClose.svg';
 import { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+//API 
+import { addFavorite } from '../../Api/Api';
 //selector
 import { selectorApp } from '../../store/reducer/App/selector';
 import { selectorClient } from '../../store/reducer/Client/selector';
+import { selectorWork } from '../../store/reducer/Work/selector';
 //slice
 import { setNumbersDefault, setButtonHiden } from '../../store/reducer/Client/slice';
 //component
@@ -15,6 +18,8 @@ import Loader from '../Loader/Loader';
 import LoaderTitle from '../Loader/LoaderTitle';
 import LoaderSub from '../Loader/LoaderSub';
 import ClientEdit from '../ClientEdit/ClientEdit';
+//utils
+import { handleTimeForCity } from '../../utils/dates';
 
 const Client = ({ loadClose, loadVisible }) => {
     const [favorite, setFavorite] = useState(false);
@@ -22,13 +27,17 @@ const Client = ({ loadClose, loadVisible }) => {
     const [openList, setOpenList] = useState(false);
     const [hidenList, setHidenList] = useState(false);
     const [heightBlock, setHeightBlock] = useState(322);
+    const [time, setTime] = useState('');
     const buttonAddHiden = useSelector(selectorClient).buttonHiden;
-    const numbersTel = useSelector(selectorClient).numbers;
+    const client_numbers = useSelector(selectorClient).client_numbers;
+    const cities = useSelector(selectorWork).cities;
+    const clientInfo = useSelector(selectorClient);
     const dispatch = useDispatch();
 
+
     useEffect(() => {
-        setHeightBlock(322 + (numbersTel.length == 1 ? 46 : (numbersTel.length - 1) * 54 + 46) - (buttonAddHiden ? 20 : 0))
-    }, [numbersTel, buttonAddHiden])
+        setHeightBlock(322 + (client_numbers.length == 1 ? 46 : (client_numbers.length - 1) * 54 + 46) - (buttonAddHiden ? 20 : 0))
+    }, [client_numbers, buttonAddHiden])
 
     useEffect(() => {
         if (openList && editOpen) {
@@ -40,9 +49,9 @@ const Client = ({ loadClose, loadVisible }) => {
             setOpenList(false);
             setTimeout(() => {
                 setHidenList(false);
-                if (numbersTel.includes('')) {
-                    const index = numbersTel.indexOf('');
-                    const array = [...numbersTel];
+                if (client_numbers.includes('')) {
+                    const index = client_numbers.indexOf('');
+                    const array = [...client_numbers];
                     array.splice(index, 1)
                     dispatch(setNumbersDefault(array));
                     dispatch(setButtonHiden(false))
@@ -50,7 +59,13 @@ const Client = ({ loadClose, loadVisible }) => {
             }, 200)
             return
         }
-    }, [openList, editOpen])
+    }, [openList, editOpen]);
+
+    useEffect(() => {
+        const timeZone = cities?.find(el => el.name == clientInfo.client_city)?.time_zone;
+        setTime(handleTimeForCity(clientInfo.client_city == 'Орел' ? 3 : timeZone));
+        clientInfo?.favorite == 0 ? setFavorite(0) : setFavorite(1)
+    }, [cities, clientInfo])
 
     const handleOpenList = () => {
         if (openList) {
@@ -79,11 +94,26 @@ const Client = ({ loadClose, loadVisible }) => {
         }
     }
 
+
+
     const handleFavorite = () => {
         if (favorite) {
-            setFavorite(false)
+            addFavorite({ id: clientInfo?.client_id })
+                .then(res => {
+                    setFavorite(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
         } else {
-            setFavorite(true)
+
+            addFavorite({ id: clientInfo?.client_id })
+                .then(res => {
+                    setFavorite(true);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
         }
     }
 
@@ -92,12 +122,12 @@ const Client = ({ loadClose, loadVisible }) => {
             <div className={s.block}>
                 <div onClick={handleEditOpen} className={s.container}>
                     <div className={s.loader}>
-                        <p className={`${s.city} ${loadClose && s.hiden}`}>Новосибирск<sup>16:13</sup></p>
+                        <p className={`${s.city} ${loadClose && s.hiden}`}>{clientInfo?.client_city}<sup>{time}</sup></p>
                         {loadClose && <LoaderSub load={loadVisible} />}
                     </div>
 
                     <div className={s.loader}>
-                        <p className={`${s.name} ${loadClose && s.hiden}`}>MR. Pipiskin</p>
+                        <p className={`${s.name} ${loadClose && s.hiden}`}>{clientInfo?.client_name}</p>
                         {loadClose && <LoaderTitle load={loadVisible} />}
                     </div>
                     <div className={`${s.icon_edit} ${editOpen && s.hidden}`}>
@@ -113,7 +143,7 @@ const Client = ({ loadClose, loadVisible }) => {
                     <IconStarActive onClick={handleFavorite} className={`${s.icon_2} ${favorite && s.icon_active}`} />
                 </div>
             </div>
-            <ClientEdit handleOpenList={handleOpenList} openList={openList} setOpenList={setOpenList} />
+            <ClientEdit handleOpenList={handleOpenList} openList={openList} setOpenList={setOpenList} city={clientInfo?.client_city} setEditOpen={setEditOpen} />
         </div>
     )
 };

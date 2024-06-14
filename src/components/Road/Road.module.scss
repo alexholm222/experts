@@ -4,6 +4,7 @@
     width: 100%;
     box-sizing: border-box;
     padding: 20px 0;
+    position: relative;
 }
 
 .list {
@@ -19,7 +20,7 @@
     transition: height 0.3s ease-in-out;
 
     &_open {
-        height: 306px;
+        height: 274px;
     }
 }
 
@@ -34,15 +35,16 @@
 
     &_dis {
         color: var(--color-button-disabled);
+
         svg circle {
-            stroke:  var(--color-button-disabled);
+            stroke: var(--color-button-disabled);
         }
     }
 
-    
+
     &_wait {
         svg path {
-            stroke:  var(--color-button-accent);
+            stroke: var(--color-button-accent);
         }
     }
 
@@ -102,6 +104,35 @@
 }
 
 .hiden {
-   opacity: 0;
-   transition: all 0.2s ease-in-out;
+    opacity: 0;
+    transition: all 0.15s;
+}
+
+.point {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation-name: circle-animation;
+    animation-duration: 12s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+
+    &_wait {
+        svg path {
+            stroke: var(--color-button-accent);
+        }
+    }
+}
+
+
+@keyframes circle-animation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

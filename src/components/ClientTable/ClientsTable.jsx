@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 const ClientsTable = ({ clients, activeTab, activeTabList }) => {
     const [sortClients, setSortClients] = useState(clients)
+    console.log(sortClients)
 
     useEffect(() => {
         const clientSort = [...clients];

@@ -6,6 +6,7 @@
     transition: all 0.2s ease-in-out;
     padding: 40px;
     box-sizing: border-box;
+    position: relative;
 
     &_hidden {
         width: calc(100% - 80px); 

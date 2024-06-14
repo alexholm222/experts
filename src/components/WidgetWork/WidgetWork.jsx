@@ -2,18 +2,28 @@ import { useEffect, useRef, useState } from 'react';
 import s from './WidgetWork.module.scss';
 import { ReactComponent as IconCancel } from '../../image/work/widget/iconCancel.svg';
 import { ReactComponent as IconPersonAdding } from '../../image/work/widget/IconPersonAdding.svg';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+//Api
+import { sendComment } from '../../Api/Api';
 //slice
 import { setHeight } from '../../store/reducer/Widget/slice';
+import { addComment, replaceComment, setCommentsForSend } from '../../store/reducer/Work/slice';
+//selector
+import { selectorClient } from '../../store/reducer/Client/selector';
+import { selectorWork } from '../../store/reducer/Work/selector';
 const tabs = ['Не взял', 'Сбросил', 'Недоступен', 'Zoom']
 
-const WidgetWork = ({setWidget}) => {
-    const [type, setType] = useState('zoom')
-    const [tab, setTab] = useState('');
+const WidgetWork = ({ setWidget, setPrevWidget, setPlanWithoutCall }) => {
+    const client_id = useSelector(selectorClient).client_id;
+    const commentForSend = useSelector(selectorWork).commentsForSend;
+    const [type, setType] = useState('zoom');
+    const [tab, setTab] = useState(JSON.parse(localStorage.getItem('tab')) || '');
+    const [comment, setComment] = useState(JSON.parse(localStorage.getItem('comment')) || '');
     const [anim, setAnim] = useState(false);
-    const [sms, setSms] = useState(false);
+    const [sms, setSms] = useState(JSON.parse(localStorage.getItem('sms')) || false);
     const dispatch = useDispatch();
     const textRef = useRef();
+    console.log(commentForSend)
 
     useEffect(() => {
         if (tab !== '') {
@@ -22,6 +32,7 @@ const WidgetWork = ({setWidget}) => {
         }
         if (textRef.current.value !== tab) {
             setTab('');
+            localStorage.setItem('tab', JSON.stringify(''));
             return
         }
     }, [tab, textRef]);
@@ -42,10 +53,15 @@ const WidgetWork = ({setWidget}) => {
     }, []);
 
     const handleCleanTab = () => {
-        if (tabs.includes(textRef.current.value)) {
-            setTab(textRef.current.value);
+        const value = textRef.current.value;
+        if (tabs.includes(value)) {
+            setTab(value);
+            localStorage.setItem('tab', JSON.stringify(value));
         } else {
             setTab('');
+            setComment(value);
+            localStorage.setItem('comment', JSON.stringify(value));
+            localStorage.setItem('tab', JSON.stringify(''));
         }
     }
 
@@ -55,25 +71,52 @@ const WidgetWork = ({setWidget}) => {
         if (value === tab) {
             setTab('');
             textRef.current.value = '';
+            setComment('');
+            localStorage.setItem('tab', JSON.stringify(''));
+            localStorage.setItem('comment', JSON.stringify(''))
         } else {
-            setTab(value)
+            setTab(value);
+            setComment(value);
+            localStorage.setItem('tab', JSON.stringify(value));
+            localStorage.setItem('comment', JSON.stringify(value))
         }
     }
 
     const handleSmsSend = () => {
         if (sms) {
             setSms(false);
+            localStorage.setItem('sms', JSON.stringify(false));
             return
         }
 
         if (!sms) {
             setSms(true);
+            localStorage.setItem('sms', JSON.stringify(true));
             return
         }
     }
 
     const handleOpenPlan = () => {
-        setWidget('plan')
+        const message = { id: 0, person_id: 0, client_id: client_id, comment: comment, date: new Date(), sms }
+        if (!commentForSend.comment) {
+            dispatch(addComment(message));
+            dispatch(setCommentsForSend(message));
+        } else {
+            dispatch(replaceComment(message));
+            dispatch(setCommentsForSend(message));
+        }
+        setWidget('plan');
+        setPrevWidget('');
+        localStorage.setItem('widget', JSON.stringify('plan'))
+        setPlanWithoutCall(false)
+    }
+
+    const handleCancelZoom = () => {
+        setWidget('reject')
+    }
+
+    const handleHandOver = () => {
+        setWidget('handOver')
     }
 
     return (
@@ -88,17 +131,17 @@ const WidgetWork = ({setWidget}) => {
             </div>
 
 
-            <textarea onChange={handleCleanTab} ref={textRef} className={s.area} placeholder='Комментарий'></textarea>
+            <textarea onChange={handleCleanTab} ref={textRef} className={s.area} placeholder='Комментарий' value={comment || ''}></textarea>
             <div className={`${s.block} ${tab == '' && s.block_hiden}`}>
                 <div onClick={handleSmsSend} className={`${s.switch} ${sms && s.switch_on} ${tab == '' && s.switch_hiden}`}>
                     <div></div>
                 </div>
                 <p> Отправить СМС клиенту о недозвоне</p>
             </div>
-            <button onClick={handleOpenPlan} className={`${s.button} ${tab == '' && s.button_margin}`}>Далее</button>
+            <button disabled={comment.length == 0} onClick={handleOpenPlan} className={`${s.button} ${tab == '' && s.button_margin}`}>Далее</button>
             <div className={s.container}>
-                <button className={s.button_small}><p>Клиент отказался</p> <IconCancel /></button>
-                <button className={s.button_small}><p>Передать клиента</p> <IconPersonAdding /></button>
+                <button onClick={handleCancelZoom} className={s.button_small}><p>Клиент отказался</p> <IconCancel /></button>
+                <button onClick={handleHandOver} className={s.button_small}><p>Передать клиента</p> <IconPersonAdding /></button>
             </div>
         </div>
     )

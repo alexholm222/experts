@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: column;
     transition: all 0.2s ease-in-out;
+    position: relative;
 
     &_anim {
         opacity: 1;
@@ -82,7 +83,7 @@
         color: var(--color-button-accent);
         transition: all 0.15s;
         cursor: pointer;
-        width: 50%;
+        width: 47%;
 
         svg {
             margin-top: -1px;
@@ -109,5 +110,16 @@
     justify-content: center;
     gap: 16px;
     height: 22px;
-    padding: 0 8px;
+    padding: 0 0 0 8px;
+}
+
+.sceleton {
+    transition: all 0.2s;
+    opacity: 1;
+    visibility: visible;
+
+    &_hiden {
+        opacity: 0;
+        visibility: hidden;
+    }
 }

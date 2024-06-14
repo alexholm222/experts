@@ -27,6 +27,21 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
+
+    a {
+        text-decoration: none;
+        color: var(--color-text-primary);
+
+        &:active {
+            text-decoration: none;
+            color: var(--color-text-primary);
+        }
+
+        &:hover {
+            text-decoration: none;
+            color: var(--color-text-primary);
+        }
+    }
 }
 
 .empty {

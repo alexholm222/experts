@@ -3,7 +3,7 @@ import s from './InputTel.module.scss';
 import InputMask from 'react-input-mask';
 import { useDispatch, useSelector } from 'react-redux';
 //slice
-import { setButtonHiden, setNumbersDefault } from '../../store/reducer/Client/slice';
+import { setButtonHiden, setNumbersDefault, setClientMain } from '../../store/reducer/Client/slice';
 //selector
 import { selectorClient } from '../../store/reducer/Client/selector';
 
@@ -13,11 +13,11 @@ const InputTel = ({ id, selectTel, setSelectTel, el }) => {
     const [telErr, setTelErr] = useState(true);
     const [telAdded, setTelAdded] = useState(false);
     const dispatch = useDispatch();
-    const numbers = useSelector(selectorClient).numbers;
+    const client_numbers = useSelector(selectorClient).client_numbers;
 
     useEffect(() => {
-        numbers.includes(valueTel) ? setTelAdded(true) : setTelAdded(false)
-    }, [numbers]);
+        client_numbers.includes(valueTel) ? setTelAdded(true) : setTelAdded(false)
+    }, [client_numbers]);
 
     useEffect(() => {
         valueTel?.length < 11 ? setTelErr(true) : setTelErr(false)
@@ -25,7 +25,8 @@ const InputTel = ({ id, selectTel, setSelectTel, el }) => {
 
     const handleSelectTel = (e) => {
         const id = e.currentTarget.id;
-        setSelectTel(id)
+        setSelectTel(id);
+        dispatch(setClientMain(el));
     };
 
     const handleTel = (e) => {
@@ -37,8 +38,8 @@ const InputTel = ({ id, selectTel, setSelectTel, el }) => {
     }
 
     const handleAddTel = () => {
-        const index = numbers.indexOf('');
-        const array = [...numbers];
+        const index = client_numbers.indexOf('');
+        const array = [...client_numbers];
         array.splice(index, 1, valueTel)
         dispatch(setNumbersDefault(array))
         dispatch(setButtonHiden(false))
