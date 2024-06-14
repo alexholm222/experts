@@ -106,7 +106,8 @@ const WidgetReject = ({ setWidget, setPrevWidget, prevWidget, type, setStageZoom
     const handleBack = () => {
         setWidget(prevWidget);
         setPrevWidget(prevWidget);
-        localStorage.setItem('widget', JSON.stringify(prevWidget))
+        localStorage.setItem('widget', JSON.stringify(prevWidget));
+        localStorage.setItem('prevWidget', JSON.stringify(prevWidget));
     }
 
     const handleSwitch = () => {

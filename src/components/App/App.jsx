@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import s from './App.module.scss';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 //websocet
 import useWebSocket, { ReadyState } from 'react-use-websocket';
@@ -56,6 +56,7 @@ const App = () => {
     const clientUpdate = useSelector(selectorClient).clientUpdate;
     const dispatch = useDispatch();
     const location = useLocation();
+    const navigate = useNavigate();
     const path = location.pathname;
 
 
@@ -109,13 +110,13 @@ const App = () => {
 
     //Тайтл вкладки
     useEffect(() => {
-        if (path == '/expert/work' || path == '/') {
+        if (path == '/experts/work' || path == '/') {
             setActivePoint(1)
             document.title = 'Работа с клиентами';
             return
         }
 
-        if (path == '/expert/clients' || path == '/expert/clients/') {
+        if (path == '/experts/clients' || path == '/experts/clients/') {
             document.title = 'Мои клиенты';
             setActivePoint(2);
             return
@@ -215,6 +216,10 @@ const App = () => {
             .catch(err => console.log(err))
     }, [clientUpdate]);
     console.log(clientUpdate)
+
+    useEffect(() => {
+        client_id == '' && navigate(`/experts/clients`);
+    }, [client_id])
 
     return (
         <div className={s.app}>

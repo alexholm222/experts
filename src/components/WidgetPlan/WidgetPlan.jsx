@@ -17,7 +17,7 @@ import { selectorClient } from '../../store/reducer/Client/selector';
 import { handleDateForPlan } from '../../utils/dates';
 
 
-const WidgetPlan = ({ setWidget,setPrevWidget,  type, planWithoutCall, setPlanTime, setPlanZoom }) => {
+const WidgetPlan = ({ setWidget, setPrevWidget,  type, planWithoutCall, setPlanTime, setPlanZoom }) => {
     const [anim, setAnim] = useState(false);
     const [animItem, setAnimItem] = useState(true);
     const [time, setTime] = useState('');
@@ -36,13 +36,13 @@ const WidgetPlan = ({ setWidget,setPrevWidget,  type, planWithoutCall, setPlanTi
     const client_id = useSelector(selectorClient).client_id;
     const dispatch = useDispatch();
     const timeNow = handleTime(0).minute >= 30 ? handleTime(1).hour : handleTime(0).hour + 0.5;
-    const timeStart = dayActive == 0 ? timeNow : 10.5;
+    const timeStart = dayActive == handleDay(0).textDate ? timeNow : 10.5;
     const timeEnd = 19;
     const timeArrayLength = tabActive == 'zoom' ? Math.floor(timeEnd - timeStart) : (timeEnd - timeStart) * 2;
     const timeBlockRef = useRef();
     const height = dayActive == handleDay(0).textDate ? timeBlockRef?.current?.offsetHeight : timeBlockRef?.current?.offsetHeight + 0.0001;
     const heightEl = (type == 'call' ? 316 : 250) + ((tabActive == 'zoom' && type !== 'zoom') ? 26 : 0);
-    console.log(tabActive, type, planWithoutCall)
+    console.log(timeArrayLength)
 
     useEffect(() => {
         setAnim(true)
@@ -115,12 +115,16 @@ const WidgetPlan = ({ setWidget,setPrevWidget,  type, planWithoutCall, setPlanTi
 
         if (!planWithoutCall && type == 'call') {
             setWidget('call');
+            setPrevWidget('call');
+            localStorage.setItem('prevWidget', JSON.stringify('call'));
             localStorage.setItem('widget', JSON.stringify('call'))
             return
         }
 
         if (!planWithoutCall && type == 'zoom') {
             setWidget('zoom');
+          /*   setPrevWidget('zoom'); */
+            localStorage.setItem('prevWidget', JSON.stringify('zoom'));
             localStorage.setItem('widget', JSON.stringify('zoom'))
             return
         }
@@ -189,7 +193,7 @@ const WidgetPlan = ({ setWidget,setPrevWidget,  type, planWithoutCall, setPlanTi
         !planWithoutCall && formData.append('id', client_id);
         !planWithoutCall &&formData.append('comment', commentsForSend.comment);
         !planWithoutCall &&formData.append('is_sms', commentsForSend.sms ? 1 : 0);
-        !planWithoutCall && commentsForSend?.file.file && formData.append('screenshot', commentsForSend.file.file);
+        !planWithoutCall && commentsForSend?.file?.file && formData.append('screenshot', commentsForSend.file?.file);
 
         !planWithoutCall && sendComment(formData/* { id: client_id, comment: commentsForSend.comment, is_sms: commentsForSend.sms, screenshot: commentsForSend.file.file ? commentsForSend.file.file : ''} */)
             .then(res => {
@@ -282,7 +286,7 @@ const WidgetPlan = ({ setWidget,setPrevWidget,  type, planWithoutCall, setPlanTi
                         }
 
 
-                        {[...Array(timeArrayLength)].map((el, index) => {
+                        {timeArrayLength > 0 && [...Array( timeArrayLength)].map((el, index) => {
                             const id = tabActive === 'zoom' ? Math.ceil(timeStart) + index : timeStart + index / 2;
                             /*   if (blockTime == id) {
                                   return <div onMouseEnter={handleOpenTooltip} onMouseLeave={handleCloseTooltip} key={id} id={id} className={`${s.item} ${s.item_time} ${s.item_block} ${animItem && s.item_time_anim} ${id == timeActive && s.item_active}`}>
@@ -340,7 +344,7 @@ const WidgetPlan = ({ setWidget,setPrevWidget,  type, planWithoutCall, setPlanTi
 
 
 
-                        {[...Array(timeArrayLength)].map((el, index) => {
+                        {timeArrayLength > 0 && [...Array(timeArrayLength)].map((el, index) => {
                             const id = tabActive === 'zoom' ? Math.ceil(timeStart) + index : timeStart + index / 2;
 
                             if (blockTime == id) {

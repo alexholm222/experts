@@ -73,13 +73,14 @@ const WidgetWorkZoom = ({ setWidget, setPrevWidget, setPlanWithoutCall }) => {
     const handleBack = () => {
         setWidget('');
         setPrevWidget('');
-        localStorage.setItem('widget', JSON.stringify(''))
+        localStorage.setItem('widget', JSON.stringify(''));
+        localStorage.setItem('prevWidget', JSON.stringify(''));
     }
 
 
     const handlePastImage = (e) => {
         const file = e.clipboardData.files[0]
-        if (file && (file.type === "image/png" || file.type === "image/jpg" || file.type === "image/jpeg") && screenShots.length == 0) {
+        if (file && (file.type === "image/png" || file.type === "image/jpg" || file.type === "image/jpeg") && screenShots?.length == 0) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function () {
@@ -98,7 +99,7 @@ const WidgetWorkZoom = ({ setWidget, setPrevWidget, setPlanWithoutCall }) => {
 
 
     const handleOpenPlan = () => {
-        const message = { id: 0, person_id: 0, client_id: client_id, comment: comment, date: new Date(), sms: false, file: screenShots[0] }
+        const message = { id: 0, person_id: 0, client_id: client_id, comment: comment, date: new Date(), sms: false, file: screenShots[0], fileForView: [screenShots[0]?.fileForView]}
         if (!commentForSend.comment) {
             dispatch(addComment(message));
             dispatch(setCommentsForSend(message));
@@ -130,7 +131,7 @@ const WidgetWorkZoom = ({ setWidget, setPrevWidget, setPlanWithoutCall }) => {
             </div>
             <div className={s.buttons}>
                 <button onClick={handleBack} className={s.button_second}><IconBackForward /> Назад</button>
-                <button onClick={handleOpenPlan} style={{ width: '168px' }} className={`${s.button}`}>Далее</button>
+                <button disabled={comment.length == 0} onClick={handleOpenPlan} style={{ width: '168px' }} className={`${s.button}`}>Далее</button>
             </div>
 
             <div className={s.container}>

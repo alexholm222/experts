@@ -22,17 +22,16 @@ const WidgetSideBar = ({ sidebarHiden }) => {
     const [timer, setTimer] = useState(0);
     const [timerNext, setTimerNext] = useState(false);
     const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const time = new Date();
     time.setSeconds(time.getSeconds() + pause);
-    console.log(status)
 
     useEffect(() => {
         if (message.action == 'not_work') {
             setStatus('start');
             setClientId('');
             localStorage.removeItem('client_id');
-            navigate(`/expert/clients`);
+            navigate(`/experts/clients`);
             return
         }
 

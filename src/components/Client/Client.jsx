@@ -118,9 +118,9 @@ const Client = ({ loadClose, loadVisible }) => {
     }
 
     return (
-        <div style={{ height: editOpen ? `${heightBlock}px` : '94px', overflow: hidenList && 'visible' }} className={s.client}>
+        <div style={{ height: editOpen ? `${heightBlock}px` : '94px', overflow: hidenList && 'visible' }} className={`${s.client}  ${loadClose && s.client_dis}`}>
             <div className={s.block}>
-                <div onClick={handleEditOpen} className={s.container}>
+                <div onClick={handleEditOpen} className={`${s.container}`}>
                     <div className={s.loader}>
                         <p className={`${s.city} ${loadClose && s.hiden}`}>{clientInfo?.client_city}<sup>{time}</sup></p>
                         {loadClose && <LoaderSub load={loadVisible} />}

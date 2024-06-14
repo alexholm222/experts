@@ -10,6 +10,7 @@ import { selectorApp } from '../../store/reducer/App/selector';
 import { selectorClient } from '../../store/reducer/Client/selector';
 //slice
 import { setHeight } from '../../store/reducer/Widget/slice';
+import { setDisabledMyClients } from '../../store/reducer/App/slice';
 //components
 import WidgetCall from '../WidgetCall/WidgetCall';
 import WidgetWork from '../WidgetWork/WidgetWork';
@@ -48,7 +49,7 @@ const Widget = ({ loadClose }) => {
     const [endType, setEndType] = useState('');
     const widgetHeight = useSelector(selectorWidget).height;
     const dispatch = useDispatch();
-    console.log(stageRoad, stageZoom, zoom_date, zoom_status, stageAnketa, stageTraining)
+    console.log(widget)
 
     useEffect(() => {
         if (widget == '') {
@@ -57,9 +58,19 @@ const Widget = ({ loadClose }) => {
     })
 
     useEffect(() => {
+        if (widget == 'zoom' || widget == 'planZoom') {
+            dispatch(setDisabledMyClients(true));
+        } else {
+            dispatch(setDisabledMyClients(false));
+        }
+    }, [widget])
+
+    useEffect(() => {
         if (message.action == 'call_client' || message.action == 'call_client_talk') {
             setWidget('call');
+            setPrevWidget('call');
             localStorage.setItem('widget', JSON.stringify('call'));
+            localStorage.setItem('prevWidget', JSON.stringify('call'));
             JSON.parse(localStorage.getItem('widget')) == 'plan' && setWidget('plan');
             return
         }
@@ -68,7 +79,8 @@ const Widget = ({ loadClose }) => {
             setTimeout(() => {
                 setWidget('');
                 setPrevWidget('');
-                localStorage.setItem('widget', JSON.stringify(''))
+                localStorage.setItem('widget', JSON.stringify(''));
+                localStorage.setItem('prevWidget', JSON.stringify(''));
             })
             return
         }
@@ -76,7 +88,8 @@ const Widget = ({ loadClose }) => {
         if (message.action == 'pause' && !planWithoutCall) {
             setWidget('');
             setPrevWidget('');
-            localStorage.setItem('widget', JSON.stringify(''))
+            localStorage.setItem('widget', JSON.stringify(''));
+            localStorage.setItem('prevWidget', JSON.stringify(''));
             return
         }
     }, [message]);
@@ -88,7 +101,7 @@ const Widget = ({ loadClose }) => {
             setStageZoom(false);
         }
 
-        if(stageRoad == 'sendAnketa' ) {
+        if (stageRoad == 'sendAnketa') {
             setStageSendAnketa(true)
         } else {
             setStageSendAnketa(false)
@@ -107,10 +120,9 @@ const Widget = ({ loadClose }) => {
         }
 
     }, [stageRoad, zoom_status]);
-    console.log(last_connect, next_connect)
 
     useEffect(() => {
-        if (handleEmptyTask(next_connect) || next_connect == '0000-00-00 00:00:00') {
+        if ((handleEmptyTask(next_connect) || next_connect == '0000-00-00 00:00:00') && handleEmptyTask(zoom_date)) {
             setEmpity(true)
         } else {
             setEmpity(false)
@@ -124,10 +136,10 @@ const Widget = ({ loadClose }) => {
             {widget === 'zoom' && <WidgetWorkZoom setWidget={setWidget} setPrevWidget={setPrevWidget} setPlanWithoutCall={setPlanWithoutCall} />}
             {widget === 'plan' && <WidgetPlan setWidget={setWidget} setPrevWidget={setPrevWidget} type={'call'} planWithoutCall={planWithoutCall} setPlanTime={setPlanTime} setPlanZoom={setPlanZoom} />}
             {widget === 'planZoom' && <WidgetPlan setWidget={setWidget} type={'zoom'} planWithoutCall={planWithoutCall} setPlanTime={setPlanTime} setPlanZoom={setPlanZoom} />}
-            {widget == 'end' && <WidgetEndWork planTime={planTime} planZoom={planZoom} setWidget={setWidget} endType={endType} setEndType={setEndType}/>}
-            {widget == 'cancelZoom' && <WidgetReject setWidget={setWidget} type={'zoom'} setStageZoom={setStageZoom} setEndType={setEndType}/>}
-            {widget == 'reject' && <WidgetReject setWidget={setWidget} setPrevWidget={setPrevWidget} prevWidget={prevWidget} type={'reject'} setStageZoom={setStageZoom} setEndType={setEndType}/>}
-            {widget == 'handOver' && <HandOverWidget setWidget={setWidget} prevWidget={prevWidget} setEndType={setEndType}/>}
+            {widget == 'end' && <WidgetEndWork planTime={planTime} planZoom={planZoom} setWidget={setWidget} endType={endType} setEndType={setEndType} />}
+            {widget == 'cancelZoom' && <WidgetReject setWidget={setWidget} type={'zoom'} setStageZoom={setStageZoom} setEndType={setEndType} />}
+            {widget == 'reject' && <WidgetReject setWidget={setWidget} setPrevWidget={setPrevWidget} prevWidget={prevWidget} type={'reject'} setStageZoom={setStageZoom} setEndType={setEndType} />}
+            {widget == 'handOver' && <HandOverWidget setWidget={setWidget} prevWidget={prevWidget} setEndType={setEndType} />}
         </div>
     )
 };

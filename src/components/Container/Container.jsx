@@ -9,7 +9,7 @@ const Container = ({ sidebarHiden }) => {
         <div className={`${s.container} ${sidebarHiden && s.container_hidden}`}>
             <Routes>
                 <Route path="*" element={<Work sidebarHiden={sidebarHiden} />} />
-                <Route /* path="*" */ path="/expert/clients/" element={<Clients />} />
+                <Route path="/experts/clients/" element={<Clients />} />
             </Routes>
         </div>
     )

@@ -52,10 +52,11 @@ const PlanerItem = ({ state, el, date }) => {
     const handleOpenClient = () => {
         dispatch(setClientId(el.id));
         localStorage.setItem('client_id', JSON.stringify(el.id));
-        navigate(`/expert/work`);
+        navigate(`/experts/work`);
         if (client_id !== el.id) {
             localStorage.removeItem('widget');
             localStorage.removeItem('comment');
+            localStorage.removeItem('screenShots')
             localStorage.removeItem('tab');
             localStorage.removeItem('sms');
         }

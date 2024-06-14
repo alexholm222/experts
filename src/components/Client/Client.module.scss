@@ -9,6 +9,11 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+
+    
+    &_dis {
+        pointer-events: none;
+    }
 }
 
 .block {
@@ -47,6 +52,7 @@
         opacity: 0;
         transition: opacity 0.2s;
     }
+
 }
 
 .icon_close {

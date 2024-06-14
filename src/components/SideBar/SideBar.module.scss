@@ -335,6 +335,15 @@
   overflow: hidden;
   margin-bottom: 4px;
 
+  &_overlay {
+    transition: all 0.2s;
+    &_dis {
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+  }
+
 
   @media(max-width: 1620px) {
     padding: 4px 6px;
@@ -392,15 +401,6 @@
 
   &:hover {
     background-color: #202E43;
-  }
-
-  &_overlay {
-
-    &_dis {
-      pointer-events: none;
-      opacity: 0.8;
-    }
-
   }
 
 }

@@ -7,6 +7,7 @@ import Road from '../Road/Road';
 import Comments from '../Comments/Comments';
 import CallPlan from '../CallPlan/CallPlan';
 import Widget from '../Widget/Widget';
+import Anketa from '../Anketa/Anketa';
 //selector
 import { selectorApp } from '../../store/reducer/App/selector';
 import { selectorClient } from '../../store/reducer/Client/selector';
@@ -38,7 +39,7 @@ const Work = ({ sidebarHiden }) => {
             setTimeout(() => {
                 setLoadVisible(true);
             }, 100)
-           
+
         } else {
             setLoadClose(false);
             setLoadVisible(false);
@@ -59,8 +60,9 @@ const Work = ({ sidebarHiden }) => {
                 <Widget loadClose={loadClose} />
             </div>
             <div className={`${s.block} ${s.block_scenario}`}>
-                    <p>В РАЗРАБОТКЕ...</p>
+                <p>В РАЗРАБОТКЕ...</p>
             </div>
+           {/*  <Anketa /> */}
         </div>
     )
 };

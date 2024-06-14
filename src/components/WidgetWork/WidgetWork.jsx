@@ -107,7 +107,8 @@ const WidgetWork = ({ setWidget, setPrevWidget, setPlanWithoutCall }) => {
         }
         setWidget('plan');
         setPrevWidget('');
-        localStorage.setItem('widget', JSON.stringify('plan'))
+        localStorage.setItem('widget', JSON.stringify('plan'));
+        localStorage.setItem('prevWidget', JSON.stringify('plan'));
         setPlanWithoutCall(false)
     }
 

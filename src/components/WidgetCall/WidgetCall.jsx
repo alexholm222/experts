@@ -37,6 +37,7 @@ const WidgetCall = ({ setWidget, setPrevWidget, stageZoom, zoomDate, stageSendAn
     const handleCall = () => {
         localStorage.removeItem('widget');
         localStorage.removeItem('comment');
+        localStorage.removeItem('screenShots')
         localStorage.removeItem('tab');
         localStorage.removeItem('sms');
         callClient(client_main_number)
@@ -44,16 +45,19 @@ const WidgetCall = ({ setWidget, setPrevWidget, stageZoom, zoomDate, stageSendAn
             .catch(err => console.log(err));
         setWidget('call');
         setPrevWidget('call');
+        localStorage.setItem('prevWidget', JSON.stringify('call'));
     }
 
     const handleZoom = () => {
         localStorage.removeItem('widget');
         localStorage.removeItem('comment');
+        localStorage.removeItem('screenShots')
         localStorage.removeItem('tab');
         localStorage.removeItem('sms');
         setWidget('zoom');
         setPrevWidget('zoom');
         localStorage.setItem('widget', JSON.stringify('zoom'))
+        localStorage.setItem('prevWidget', JSON.stringify('zoom'));
     }
 
     const handlePlanContact = () => {

@@ -1,6 +1,6 @@
 import s from './SideBar.module.scss';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 //image 
 import avatar from '../../image/avatar.png';
 import { ReactComponent as MenuWorkIcon } from '../../image/sideBar/menuWork.svg';
@@ -16,6 +16,7 @@ import WidgetSideBar from '../WidgetSideBar/WidgetSideBar';
 //selector
 import { selectorClient } from '../../store/reducer/Client/selector';
 import { selectorExpert } from '../../store/reducer/Expert/selector';
+import { selectorCommand } from '../../store/reducer/Command/selector';
 //slice
 import { setExpert } from '../../store/reducer/Expert/slice';
 import { setLoadManager } from '../../store/reducer/App/slice';
@@ -25,11 +26,16 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
   const [anim, setAnim] = useState(false);
   const [loadClose, setLoadClose] = useState(true);
   const [loadVisible, setLoadVisible] = useState(true);
+  const [disabledMyClients, setDisabledMyClients] = useState(false);
   const loadPage = useSelector(selectorApp).loadPage;
   const loadManager = useSelector(selectorApp).loadManager;
+  const disabledMyClients2 = useSelector(selectorApp).disabledMyClients;
   const client_id = useSelector(selectorClient).client_id;
+  const message = useSelector(selectorCommand).message;
+  
   const dispatch = useDispatch();
-  console.log(expertInfo)
+  const navigate = useNavigate();
+  console.log(disabledMyClients)
   //Лоадер для сайдбара (инфо о менеджере)
   useEffect(() => {
     if (!loadPage && !loadManager) {
@@ -49,17 +55,26 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
     })
   }, []);
 
+  useEffect(() => {
+    if (message.action == 'call_client' || message.action == 'call_client_talk' || message.action == 'next_client') {
+      setDisabledMyClients(true);
+      navigate(`/experts/work`);
+    } else {
+      setDisabledMyClients(false)
+    }
+  }, [message]);
+
 
   useEffect(() => {
     getManagerInfo()
-    .then(res => {
-      const data = res.data.data; 
-      const expert = {name: data.name, surname: data.surname, avatar: data.avatar}
-      console.log(res)
-      dispatch(setExpert(expert));
-      dispatch(setLoadManager(false));
-    })
-    .catch(err => console.log(err))
+      .then(res => {
+        const data = res.data.data;
+        const expert = { name: data.name, surname: data.surname, avatar: data.avatar }
+        console.log(res)
+        dispatch(setExpert(expert));
+        dispatch(setLoadManager(false));
+      })
+      .catch(err => console.log(err))
   }, []);
 
 
@@ -125,7 +140,7 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
         </div>
         <ul className={`${s.menu} ${sidebarHiden && s.menu_hiden}`}>
           <div className={`${s.point_overlay} ${client_id == '' && s.point_overlay_dis}`}>
-            <Link to={ client_id == '' ? '/expert/clients' : '/expert/work'}>
+            <Link to={'/experts/work'}>
               <li className={`${s.point} ${s.point_tel} ${sidebarHiden && s.point_hiden} ${activePoint == 1 && s.point_tel_active}`}>
                 <MenuWorkIcon />
                 <p className={`${s.point_text} ${sidebarHiden && s.point_text_hiden}`}>Работа с клиентами</p>
@@ -133,12 +148,15 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
             </Link>
           </div>
 
-          <Link to={'/expert/clients'}>
-            <li className={`${s.point} ${s.point_tel} ${sidebarHiden && s.point_hiden} ${activePoint == 2 && s.point_tel_active}`}>
-              <MenuClientsIcon />
-              <p className={`${s.point_text} ${sidebarHiden && s.point_text_hiden}`}>Мои клиенты</p>
-            </li>
-          </Link>
+          <div className={`${s.point_overlay} ${(disabledMyClients || disabledMyClients2) && s.point_overlay_dis}`}>
+            <Link to={'/experts/clients'}>
+              <li className={`${s.point} ${s.point_tel} ${sidebarHiden && s.point_hiden} ${activePoint == 2 && s.point_tel_active}`}>
+                <MenuClientsIcon />
+                <p className={`${s.point_text} ${sidebarHiden && s.point_text_hiden}`}>Мои клиенты</p>
+              </li>
+            </Link>
+          </div>
+
         </ul>
       </div>
       <WidgetSideBar sidebarHiden={sidebarHiden} />

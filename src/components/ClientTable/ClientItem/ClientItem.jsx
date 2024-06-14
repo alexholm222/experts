@@ -225,12 +225,13 @@ const ClientItem = ({ client, id }) => {
     const handleOpenClient = () => {
         dispatch(setClientId(id));
         localStorage.setItem('client_id', JSON.stringify(id));
-        navigate(`/expert/work`);
+        navigate(`/experts/work`);
         if (client_id !== id) {
             localStorage.removeItem('widget');
             localStorage.removeItem('comment');
             localStorage.removeItem('tab');
             localStorage.removeItem('sms');
+            localStorage.removeItem('screenShots')
             return
         }
     }

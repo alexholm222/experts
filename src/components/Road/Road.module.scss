@@ -97,6 +97,11 @@
     &:hover {
         filter: brightness(0.98);
     }
+
+    &_dis {
+        pointer-events: none;
+        opacity: 0.4;
+    }
 }
 
 .loader {

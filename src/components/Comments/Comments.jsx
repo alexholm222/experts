@@ -11,7 +11,7 @@ const Comments = ({ loadClose, loadVisible }) => {
     const [anim, setAnim] = useState(false)
     const [openList, setOpenList] = useState(false);
     const [firstListLength, setFirstListLength] = useState(1);
-    const [height, setHeight] = useState(65);
+    const [height, setHeight] = useState(560);
     const [heightHiden, setHeightHiden] = useState(65);
     const heightRef = useRef();
     const heightHiddenRef = useRef();
@@ -57,12 +57,12 @@ const Comments = ({ loadClose, loadVisible }) => {
                 })}
             </ul>
 
-            <ul style={{ maxHeight: openList ? `${height}px` : `${heightHiden}px` }} className={`${s.list} ${anim && s.list_anim}`}>
+            <ul style={{ maxHeight: openList ? `${height}px` : `${heightHiden}px` }} className={`${s.list} ${anim && s.list_anim} ${openList && s.list_open}`}>
                 {comments.map((el, index) => {
-                    return (index == 0 || index == 1) && firstListLength < comments.length ?
+                   /*  return (index == 0 || index == 1) && firstListLength < comments.length ?
                         <CommentNew key={el.id} el={el} id={index} loadClose={loadClose} loadVisible={loadVisible} />
-                        :
-                        <Comment key={el.id} el={el} id={index} loadClose={loadClose} loadVisible={loadVisible} />
+                        : */
+                        return <Comment key={el.id} el={el} id={index} loadClose={loadClose} loadVisible={loadVisible} />
                 })}
             </ul>
         </div>

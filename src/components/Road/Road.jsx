@@ -143,7 +143,7 @@ function Road({ loadClose, loadVisible }) {
                 }
             </ul>
             {loadClose && <RoadSceleton load={loadClose} />}
-            <button onClick={handleOpenList} className={`${s.button} ${openList && s.button_open}`}><CaretDown /></button>
+            <button onClick={handleOpenList} className={`${s.button} ${loadClose && s.button_dis} ${openList && s.button_open}`}><CaretDown /></button>
         </div>
     )
 };

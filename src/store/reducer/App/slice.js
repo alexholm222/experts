@@ -4,6 +4,7 @@ const initialState = {
     loadPage: true,
     loadManager: true,
     loadClient: true,
+    disabledMyClients: false,
 };
 
 const AppSlice = createSlice({
@@ -23,13 +24,18 @@ const AppSlice = createSlice({
         setLoadClient(state, action) {
             state.loadClient = action.payload;
         },
+
+        setDisabledMyClients(state, action) {
+            state.disabledMyClients = action.payload;
+        },
     },
 });
 
 export const {
     setLoadPage,
     setLoadManager,
-    setLoadClient
+    setLoadClient,
+    setDisabledMyClients
 } = AppSlice.actions;
 
 export default AppSlice.reducer;
