@@ -368,6 +368,48 @@ export const handleDatePlan = (d) => {
     }
 }
 
+export const handleDateAnketa = (d) => {
+    const date = new Date(d);
+    const dateNow = new Date();
+    const time = d?.slice(-8, -3);
+    const day = date.getDate();
+    const month = date.getMonth();
+    const dayNow = dateNow.getDate();
+
+    let fMonth;
+    switch (month) {
+        case 0: fMonth = "января"; break;
+        case 1: fMonth = "февраля"; break;
+        case 2: fMonth = "марта"; break;
+        case 3: fMonth = "апреля"; break;
+        case 4: fMonth = "мая"; break;
+        case 5: fMonth = "июня"; break;
+        case 6: fMonth = "июля"; break;
+        case 7: fMonth = "августа"; break;
+        case 8: fMonth = "сентября"; break;
+        case 9: fMonth = "октября"; break;
+        case 10: fMonth = "ноября"; break;
+        case 11: fMonth = "декабря"; break;
+        default:
+    }
+
+    if (dayNow - day == 0) {
+        return `сегодня ${time}`
+    }
+
+    if (day - dayNow == -1) {
+        return `вчера ${time}`
+    }
+
+    if (day - dayNow >= 1) {
+        return `${day} ${fMonth} ${time}`
+    }
+
+    if (day - dayNow < 0) {
+        return `${day} ${fMonth} ${time}`
+    }
+}
+
 export const handleDifDateZoom = (d) => {
     const date = new Date(d);
     const dateNow = new Date();
@@ -452,5 +494,13 @@ export const handleDateStudyReq = (d) => {
             state: 1,
         }
     }
+}
 
+export const handleDateFormat = (d) => {
+    const date = new Date(d);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+
+    return `${day > 10 ? day : `0${day}`}.${month > 10 ? month : `0${month}`}.${year}`
 }

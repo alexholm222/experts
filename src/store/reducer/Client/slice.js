@@ -11,7 +11,8 @@ const initialState = {
     favorite: 0,
     clientUpdate: 0,
     menuIdUpdate: 0,
-    stage: 'bp'
+    stage: 'bp',
+    anketaAcceptDate: '0000-00-00'
 };
 /* stages =[bp, viewBp (ознакомился с БП, road status == finished), ReqZoom (запросил zoom последний лог type == ReqZoom), setZoom (записался на Zoom road status == finished), 
 finishZoom (road status == finished)] , noZoom (зумм не состоялся setZoom road status == finished берем последний лог и смотрим что время лога меньше чем текущего времени на пол часа ), 
@@ -75,6 +76,11 @@ const ClientSlice = createSlice({
             state.stage = actions.payload;
         },
 
+        setAnketaAcceptDate(state, actions) {
+            state.anketaAcceptDate = actions.payload;
+        },
+
+
     },
 });
 
@@ -91,7 +97,8 @@ export const {
     setFavorite,
     setClientUpdate,
     setMenuIdUpdate,
-    setStage
+    setStage,
+    setAnketaAcceptDate
 } = ClientSlice.actions;
 
 export default ClientSlice.reducer;

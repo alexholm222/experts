@@ -55,6 +55,7 @@ const PlanerItem = ({ state, el, date }) => {
         navigate(`/experts/work`);
         if (client_id !== el.id) {
             localStorage.removeItem('widget');
+            localStorage.removeItem('prevWidget');
             localStorage.removeItem('comment');
             localStorage.removeItem('screenShots')
             localStorage.removeItem('tab');

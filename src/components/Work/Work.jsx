@@ -11,6 +11,7 @@ import Anketa from '../Anketa/Anketa';
 //selector
 import { selectorApp } from '../../store/reducer/App/selector';
 import { selectorClient } from '../../store/reducer/Client/selector';
+import { selectorWork } from '../../store/reducer/Work/selector';
 
 const Work = ({ sidebarHiden }) => {
     const [anim, setAnim] = useState(false);
@@ -20,6 +21,8 @@ const Work = ({ sidebarHiden }) => {
     const loadPage = useSelector(selectorApp).loadPage;
     const loadClient = useSelector(selectorApp).loadClient;
     const client_id = useSelector(selectorClient).client_id;
+    const openAnketa = useSelector(selectorWork).anketaOpen;
+    console.log(openAnketa)
 
     useEffect(() => {
         setTimeout(() => {
@@ -62,7 +65,7 @@ const Work = ({ sidebarHiden }) => {
             <div className={`${s.block} ${s.block_scenario}`}>
                 <p>В РАЗРАБОТКЕ...</p>
             </div>
-           {/*  <Anketa /> */}
+            {openAnketa && <Anketa />}
         </div>
     )
 };

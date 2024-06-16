@@ -10,6 +10,8 @@ const initialState = {
     last_connect: '0000-00-00',
     zoom_status: -1,
     zoom_date: '0000-00-00',
+    anketaOpen: false,
+    anketaForm: {},
 };
 
 const WorkSlice = createSlice({
@@ -61,6 +63,13 @@ const WorkSlice = createSlice({
             state.last_connect = action.payload;
         },
 
+        setAnketaOpen(state, action) {
+            state.anketaOpen = action.payload;
+        },
+
+        setAnketaForm(state, action) {
+            state.anketaForm = action.payload;
+        },
 
     },
 });
@@ -77,6 +86,8 @@ export const {
     addComment,
     replaceComment,
     setCommentsForSend,
+    setAnketaOpen,
+    setAnketaForm
 } = WorkSlice.actions;
 
 export default WorkSlice.reducer;

@@ -3,11 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import s from './Road.module.scss';
 import { ReactComponent as CaretDown } from '../../image/work/CaretDown.svg';
 import RoadItem from './RoadItem';
+//Api
+import { getAnketa } from '../../Api/Api';
 //selector
 import { selectorWork } from '../../store/reducer/Work/selector';
 import { selectorClient } from '../../store/reducer/Client/selector';
 //slice
-import { setStage } from '../../store/reducer/Client/slice';
+import { setStage, setAnketaAcceptDate } from '../../store/reducer/Client/slice';
+import { setAnketaForm } from '../../store/reducer/Work/slice';
 //component
 import RoadSceleton from './RoadSceleton/RoadSceleton';
 //utils
@@ -30,7 +33,7 @@ function Road({ loadClose, loadVisible }) {
     console.log(stage, zoom_date)
 
     useEffect(() => {
-        if (road[0]?.status == 'finished' && road[1]?.status == 'disabled' &&  road[1]?.logs.length == 0) {
+        if (road[0]?.status == 'finished' && road[1]?.status == 'disabled' && road[1]?.logs.length == 0) {
             dispatch(setStage('viewBp'));
             return
         }
@@ -90,6 +93,28 @@ function Road({ loadClose, loadVisible }) {
             return
         }
     }, [road, client_id, clientUpdate]);
+
+    useEffect(() => {
+        if (road[3]?.status == 'finished') {
+            const acceptLog = road[3]?.logs.find(el => el.type == 'ClientAnketaAccept');
+            dispatch(setAnketaAcceptDate(acceptLog.date));
+            return
+        }
+    }, [road]);
+
+    useEffect(() => {
+        const sendAnketaLog = road[3]?.logs.find(el => el.type == 'SendForm')
+        if (sendAnketaLog) {
+                getAnketa(client_id)
+                .then(res => {
+                    console.log(res);
+                    const anketa = res.data.anketa;
+                    dispatch(setAnketaForm(anketa));
+                })
+                .catch(err => console.log(err))
+            return
+        }
+    }, [road[3]]);
 
     useEffect(() => {
         if (client_id == clientUpdate) {

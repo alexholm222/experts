@@ -60,7 +60,7 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
       setDisabledMyClients(true);
       navigate(`/experts/work`);
     } else {
-      setDisabledMyClients(false)
+      setDisabledMyClients(false);
     }
   }, [message]);
 

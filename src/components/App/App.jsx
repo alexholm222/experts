@@ -179,7 +179,7 @@ const App = () => {
                     dispatch(setLoadClient(false));
                 }, 150);
             })
-            .catch(err => console.log(err))
+            .catch(err => console.log(err));
     }, [client_id]);
 
 

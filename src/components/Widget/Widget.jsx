@@ -49,13 +49,13 @@ const Widget = ({ loadClose }) => {
     const [endType, setEndType] = useState('');
     const widgetHeight = useSelector(selectorWidget).height;
     const dispatch = useDispatch();
-    console.log(widget)
+    console.log(prevWidget, JSON.parse(localStorage.getItem('prevWidget')))
 
     useEffect(() => {
         if (widget == '') {
             dispatch(setHeight(316))
         }
-    })
+    });
 
     useEffect(() => {
         if (widget == 'zoom' || widget == 'planZoom') {

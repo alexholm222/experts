@@ -29,7 +29,7 @@ const WidgetSideBar = ({ sidebarHiden }) => {
     useEffect(() => {
         if (message.action == 'not_work') {
             setStatus('start');
-            setClientId('');
+            dispatch(setClientId(''));
             localStorage.removeItem('client_id');
             navigate(`/experts/clients`);
             return

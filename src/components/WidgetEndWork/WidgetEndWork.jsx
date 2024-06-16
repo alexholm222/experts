@@ -28,6 +28,7 @@ const WidgetEndWork = ({ planTime, planZoom, setWidget, endType, setEndType }) =
 
     useEffect(() => {
         localStorage.removeItem('widget');
+        localStorage.removeItem('prevWidget');
         localStorage.removeItem('comment');
         localStorage.removeItem('tab');
         localStorage.removeItem('sms');

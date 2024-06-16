@@ -149,8 +149,49 @@ export const transferClient = (data) => {
     })
 } 
 
+//анкета
+export const getAnketa = (id) => {
+    return instanceWithToken.get(`${baseUrl}api/frmanager/clients/anketa/${id}`);
+}
 
+export const acceptAnketa = (id) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/frmanager/clients/anketa/accept`,
+        data: {id},
+    })
+}
 
+export const rejectAnketa = (id) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/frmanager/clients/anketa/reject`,
+        data: {id},
+    })
+}
+
+export const retryAnketa = (id) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/frmanager/clients/anketa/retry`,
+        data: {id},
+    })
+}
 
 
  
