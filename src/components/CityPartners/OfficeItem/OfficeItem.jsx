@@ -88,12 +88,15 @@ const OfficeItem = ({ office, openOffice, setOpenOffice }) => {
 
                 <div className={s.block}>
                     <p className={s.sub}>Выручка</p>
-                    <p className={s.text}>{office.signature}</p>
+                    <p className={s.text}>За квартал: {office?.revenue?.last_quarter}</p>
+                    <p className={s.text}>За 2023 год :{office?.revenue?.last_year}</p>
+                    
                 </div>
 
                 <div className={s.block}>
                     <p className={s.sub}>Клиентская база</p>
-                    <p className={s.text}>{office.signature}</p>
+                    <p className={s.text}>Заказчики {office?.customer_base?.companies}</p>
+                    <p className={s.text}>Исполнители {office?.customer_base?.workers}</p>
                 </div>
 
                 {officePhoto.length > 0 && <div className={s.block}>
