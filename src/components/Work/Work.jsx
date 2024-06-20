@@ -8,12 +8,14 @@ import Comments from '../Comments/Comments';
 import CallPlan from '../CallPlan/CallPlan';
 import Widget from '../Widget/Widget';
 import Anketa from '../Anketa/Anketa';
+import CityPartners from '../CityPartners/CityPartners';
+import Scenario from '../Scenario/Scenario';
 //selector
 import { selectorApp } from '../../store/reducer/App/selector';
 import { selectorClient } from '../../store/reducer/Client/selector';
 import { selectorWork } from '../../store/reducer/Work/selector';
 
-const Work = ({ sidebarHiden }) => {
+const Work = ({ sidebarHiden, scenario }) => {
     const [anim, setAnim] = useState(false);
     const [loadClose, setLoadClose] = useState(true);
     const [loadVisible, setLoadVisible] = useState(true);
@@ -62,8 +64,12 @@ const Work = ({ sidebarHiden }) => {
                 <CallPlan loadClose={loadClose} loadVisible={loadVisible} sidebarHiden={sidebarHiden} />
                 <Widget loadClose={loadClose} />
             </div>
+            <div className={`${s.block} ${s.block_city}`}>
+                <CityPartners />
+            </div>
+
             <div className={`${s.block} ${s.block_scenario}`}>
-                <p>В РАЗРАБОТКЕ...</p>
+                <Scenario scenario={scenario}/>
             </div>
             {openAnketa && <Anketa />}
         </div>

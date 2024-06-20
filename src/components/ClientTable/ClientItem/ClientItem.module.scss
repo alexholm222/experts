@@ -3,6 +3,11 @@
     cursor: pointer;
     box-sizing: border-box;
     text-decoration: none;
+
+    &_disabled {
+        pointer-events: none;
+    }
+    
     &:hover {
         background-color: var(--color-bg-full);
     }

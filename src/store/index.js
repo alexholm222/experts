@@ -6,8 +6,9 @@ import MyClientsSlice from './reducer/MyClients/slice';
 import UpdaterSlice from './reducer/Updater/slice';
 import PlanerSlice from './reducer/Planer/slice';
 import WorkSlice from './reducer/Work/slice'; 
-import CommandSlice from './reducer/Command/slice';
+import CommandSlice from './reducer/Command/slice'; 
 import ExpertSlice from './reducer/Expert/slice';
+import PartnersSlice from './reducer/Partners/slice';
 
 export const rootReducer = combineReducers({
   AppSlice,
@@ -18,7 +19,8 @@ export const rootReducer = combineReducers({
   PlanerSlice,
   WorkSlice,
   CommandSlice,
-  ExpertSlice
+  ExpertSlice,
+  PartnersSlice
 });
 
 export const store = configureStore({

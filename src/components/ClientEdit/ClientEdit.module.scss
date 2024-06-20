@@ -58,6 +58,11 @@
     svg path {
         fill: var(--color-button-disabled);
     }
+
+    &_dis {
+        pointer-events: none;
+        background-color: var(--color-bg-daily);
+    }
 }
 
 .block {

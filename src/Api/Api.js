@@ -193,7 +193,27 @@ export const retryAnketa = (id) => {
     })
 }
 
+//отмена обучения
+export const cancelTraning = (id) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/frmanager/clients/reject_train`,
+        data: {id},
+    })
+}
 
+export const getPartners = (client_id) => {
+    return instanceWithToken.get(`${baseUrl}api/frmanager/clients/info_companies/${client_id}`);
+}
+
+export const getScenario = () => {
+    return instanceWithToken.get(`${baseUrl}api/frmanager/clients/scripts`);
+}
  
 
 

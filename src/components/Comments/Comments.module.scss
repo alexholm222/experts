@@ -7,14 +7,18 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    min-height: 137px;
-    overflow: hidden;
-    transition: all 0.35s ease-in-out;
+    opacity: 1;
+    transition: all 0.2s;
 
     &_hiden {
         min-height: 0;
         height: 0;
         padding: 0;
+        overflow: hidden;
+    }
+
+    &_anim {
+        opacity: 1;
     }
 }
 
@@ -52,7 +56,7 @@
 .list {
     display: flex;
     flex-direction: column;
-    max-height: 0;
+    /*   max-height: 0; */
     height: auto;
     list-style-type: none;
     margin: 0;
@@ -60,12 +64,14 @@
     overflow: hidden;
     transition: all 0.35s ease-in-out;
 
-    &_anim {
+
+    /*  &_anim {
         max-height: 700px;
-    }
+    } */
 
     &_hiden {
         width: 100%;
+        box-sizing: border-box;
         left: 0;
         top: 0;
         position: absolute;
@@ -73,12 +79,12 @@
         flex-direction: column;
         list-style-type: none;
         visibility: hidden;
-        padding: 0;
-        margin: 38px 0 0;
+        padding: 0 20px;
+        margin: 58px 0 0;
 
     }
 
- /*    &_open {
+    /*    &_open {
         overflow-y: auto;
         overflow-x: hidden;
     } */
@@ -180,9 +186,8 @@
     box-shadow: var(--box-shadow2);
     cursor: pointer;
 
-    img {
+    &_inner {
         height: 110px;
         width: auto;
-
     }
 }

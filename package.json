@@ -1,12 +1,13 @@
 {
   "name": "experts",
   "version": "0.1.0",
-  "homepage": "https://alexholm222.github.io/experts",
+  "homepage": "",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
+    "@fancyapps/ui": "^5.0.36",
     "@lottiefiles/react-lottie-player": "^3.5.3",
     "@mui/material": "^5.15.12",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
@@ -153,6 +154,7 @@
     ]
   },
   "devDependencies": {
+    "fancybox": "^3.0.1",
     "gh-pages": "^6.1.1"
   }
 }

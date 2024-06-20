@@ -41,11 +41,11 @@ const Clients = () => {
     const [anim, setAnim] = useState(false);
     const [loadClose, setLoadClose] = useState(true);
     const [loadVisible, setLoadVisible] = useState(true);
-    const [activeTab, setActiveTab] = useState(1);
-    const [planerLoader, setPlanerLoader] = useState(false);
+    const [activeTab, setActiveTab] = useState(2);
+  /*   const [planerLoader, setPlanerLoader] = useState(false); */
     const loadPage = useSelector(selectorApp).loadPage;
     const loadClient = useSelector(selectorApp).loadClient;
-    const planerLoad = useSelector(selectorPlaner).planerLoad;
+ /*    const planerLoad = useSelector(selectorPlaner).planerLoad; */
     const dispatch = useDispatch();
     //получение списка моих клиентов
 
@@ -173,19 +173,7 @@ const Clients = () => {
             .catch(err => console.log(err))
     }, []);
 
-    //Получение данных планера
-    useEffect(() => {
-        getPlaner()
-            .then(res => {
-                const data = res.data;
-                dispatch(setPlaner(data));
-                setTimeout(() => {
-                    dispatch(setPlanerLoad(false))
-                }, 100)
-            })
-            .catch(err => console.log(err))
-    }, []);
-
+   
     //Лоадер инфо о клиенте
     useEffect(() => {
         if (!loadPage && !loadClient) {
@@ -211,11 +199,11 @@ const Clients = () => {
         }, 100)
     }, []);
 
-    useEffect(() => {
+  /*   useEffect(() => {
         planerLoad ? setPlanerLoader(true) : setTimeout(() => {
             setPlanerLoader(false)
         }, 150)
-    }, [planerLoad])
+    }, [planerLoad]) */
 
     const handleActiveTab = (e) => {
         const id = e.currentTarget.id;
@@ -227,9 +215,9 @@ const Clients = () => {
             <div className={s.header}>
                 <h2 className={s.title}>Мои клиенты</h2>
                 <div className={s.tabs}>
-                    <div onClick={handleActiveTab} id='1' className={`${s.tab} ${activeTab == 1 && s.tab_active}`}>
+                   {/*  <div onClick={handleActiveTab} id='1' className={`${s.tab} ${activeTab == 1 && s.tab_active}`}>
                         <p>Планер</p>
-                    </div>
+                    </div> */}
 
                     <div onClick={handleActiveTab} id='2' className={`${s.tab} ${activeTab == 2 && s.tab_active}`}>
                         <p>Клиенты</p>
@@ -241,8 +229,8 @@ const Clients = () => {
                 </div>
             </div>
             {(activeTab == 2 || activeTab == 3) && <ClientsList activeTab={activeTab} />}
-            {activeTab == 1 && <Planer />}
-            {activeTab == 1 && planerLoader && <PlanerSceleton load={planerLoad} />}
+            {/* {activeTab == 1 && <Planer />} */}
+            {/* {activeTab == 1 && planerLoader && <PlanerSceleton load={planerLoad} />} */}
         </div>
     )
 };

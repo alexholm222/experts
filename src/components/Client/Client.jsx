@@ -19,7 +19,7 @@ import LoaderTitle from '../Loader/LoaderTitle';
 import LoaderSub from '../Loader/LoaderSub';
 import ClientEdit from '../ClientEdit/ClientEdit';
 //utils
-import { handleTimeForCity } from '../../utils/dates';
+import { handleTimeForCity, handleTotalCallTime } from '../../utils/dates';
 
 const Client = ({ loadClose, loadVisible }) => {
     const [favorite, setFavorite] = useState(false);
@@ -30,13 +30,16 @@ const Client = ({ loadClose, loadVisible }) => {
     const [time, setTime] = useState('');
     const buttonAddHiden = useSelector(selectorClient).buttonHiden;
     const client_numbers = useSelector(selectorClient).client_numbers;
+    const client_id = useSelector(selectorClient).client_id;
+    const stage = useSelector(selectorClient).stage;
     const cities = useSelector(selectorWork).cities;
     const clientInfo = useSelector(selectorClient);
+    console.log(loadClose)
     const dispatch = useDispatch();
 
-
+  //убрать - 36 когда вернешь добовление номера
     useEffect(() => {
-        setHeightBlock(322 + (client_numbers.length == 1 ? 46 : (client_numbers.length - 1) * 54 + 46) - (buttonAddHiden ? 20 : 0))
+        setHeightBlock(322 - 36 + (client_numbers.length == 1 ? 46 : (client_numbers.length - 1) * 54 + 46) - (buttonAddHiden ? 20 - 36 : 0))
     }, [client_numbers, buttonAddHiden])
 
     useEffect(() => {
@@ -65,7 +68,15 @@ const Client = ({ loadClose, loadVisible }) => {
         const timeZone = cities?.find(el => el.name == clientInfo.client_city)?.time_zone;
         setTime(handleTimeForCity(clientInfo.client_city == 'Орел' ? 3 : timeZone));
         clientInfo?.favorite == 0 ? setFavorite(0) : setFavorite(1)
-    }, [cities, clientInfo])
+    }, [cities, clientInfo]);
+
+    useEffect(() => {
+        setOpenList(false);
+    }, [client_id]);
+
+    useEffect(() => {
+        loadClose && setEditOpen(false)
+    }, [loadClose]);
 
     const handleOpenList = () => {
         if (openList) {
@@ -127,7 +138,8 @@ const Client = ({ loadClose, loadVisible }) => {
                     </div>
 
                     <div className={s.loader}>
-                        <p className={`${s.name} ${loadClose && s.hiden}`}>{clientInfo?.client_name}</p>
+                        <p className={`${s.name} ${loadClose && s.hiden}`}>{clientInfo?.client_name} {clientInfo?.client_surname}</p>
+                        {/* <p className={s.time}>{handleTotalCallTime(clientInfo?.talkTime)}</p> */}
                         {loadClose && <LoaderTitle load={loadVisible} />}
                     </div>
                     <div className={`${s.icon_edit} ${editOpen && s.hidden}`}>
@@ -143,7 +155,7 @@ const Client = ({ loadClose, loadVisible }) => {
                     <IconStarActive onClick={handleFavorite} className={`${s.icon_2} ${favorite && s.icon_active}`} />
                 </div>
             </div>
-            <ClientEdit handleOpenList={handleOpenList} openList={openList} setOpenList={setOpenList} city={clientInfo?.client_city} setEditOpen={setEditOpen} />
+            <ClientEdit handleOpenList={handleOpenList} openList={openList} setOpenList={setOpenList} city={clientInfo?.client_city} setEditOpen={setEditOpen} stage={stage}/>
         </div>
     )
 };

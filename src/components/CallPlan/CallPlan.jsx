@@ -10,7 +10,7 @@ const CallPlan = ({ loadClose, loadVisible, sidebarHiden }) => {
     const dialog = useSelector(selectorWork).dialog;
     const [textBig, setTextBig] = useState(JSON.parse(localStorage.getItem('switchText')) || false);
     const [textAnim, setTextAnim] = useState(false);
-    const [heightBlock, setHeightBlock] = useState(900);
+    const [heightBlock, setHeightBlock] = useState(700);
     const [textVis, setTextVis] = useState(false);
     const textSmallRef = useRef();
     const textBigRef = useRef();

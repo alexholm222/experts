@@ -5,6 +5,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import avatar from '../../image/avatar.png';
 import { ReactComponent as MenuWorkIcon } from '../../image/sideBar/menuWork.svg';
 import { ReactComponent as MenuClientsIcon } from '../../image/sideBar/menuClients.svg';
+import { ReactComponent as IconPhone } from '../../image/sideBar/iconPhone.svg';
+import { ReactComponent as IconPartners } from '../../image/sideBar/iconPartners.svg'; 
+import { ReactComponent as IconAnalytics } from '../../image/sideBar/iconAnalytics.svg';
+import { ReactComponent as IconPlaner } from '../../image/sideBar/iconPlaner.svg';
 //Api
 import { getManagerInfo } from '../../Api/Api';
 //components
@@ -20,22 +24,20 @@ import { selectorCommand } from '../../store/reducer/Command/selector';
 //slice
 import { setExpert } from '../../store/reducer/Expert/slice';
 import { setLoadManager } from '../../store/reducer/App/slice';
+import { setDisabledMyClients } from '../../store/reducer/App/slice';
 
 const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
   const expertInfo = useSelector(selectorExpert).expert;
   const [anim, setAnim] = useState(false);
   const [loadClose, setLoadClose] = useState(true);
   const [loadVisible, setLoadVisible] = useState(true);
-  const [disabledMyClients, setDisabledMyClients] = useState(false);
   const loadPage = useSelector(selectorApp).loadPage;
   const loadManager = useSelector(selectorApp).loadManager;
-  const disabledMyClients2 = useSelector(selectorApp).disabledMyClients;
   const client_id = useSelector(selectorClient).client_id;
   const message = useSelector(selectorCommand).message;
-  
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(disabledMyClients)
+
   //Лоадер для сайдбара (инфо о менеджере)
   useEffect(() => {
     if (!loadPage && !loadManager) {
@@ -57,10 +59,10 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
 
   useEffect(() => {
     if (message.action == 'call_client' || message.action == 'call_client_talk' || message.action == 'next_client') {
-      setDisabledMyClients(true);
+      dispatch(setDisabledMyClients(true));
       navigate(`/experts/work`);
     } else {
-      setDisabledMyClients(false);
+      dispatch(setDisabledMyClients(false));
     }
   }, [message]);
 
@@ -148,7 +150,16 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
             </Link>
           </div>
 
-          <div className={`${s.point_overlay} ${(disabledMyClients || disabledMyClients2) && s.point_overlay_dis}`}>
+          <div className={`${s.point_overlay}`}>
+            <Link to={'/experts/planer'}>
+              <li className={`${s.point} ${s.point_tel} ${sidebarHiden && s.point_hiden} ${activePoint == 3 && s.point_tel_active}`}>
+                <IconPlaner />
+                <p className={`${s.point_text} ${sidebarHiden && s.point_text_hiden}`}>Планер</p>
+              </li>
+            </Link>
+          </div>
+
+          <div className={`${s.point_overlay}`}>
             <Link to={'/experts/clients'}>
               <li className={`${s.point} ${s.point_tel} ${sidebarHiden && s.point_hiden} ${activePoint == 2 && s.point_tel_active}`}>
                 <MenuClientsIcon />
@@ -156,6 +167,29 @@ const SideBar = ({ sidebarHiden, setSideBarHiden, activePoint }) => {
               </li>
             </Link>
           </div>
+
+        
+
+          {/*  <a href={'https://lk.skilla.ru/mango/old'} target='_blank'>
+              <li className={`${s.point} ${s.point_tel} ${sidebarHiden && s.point_hiden} ${activePoint == 3 && s.point_tel_active}`}>
+                <IconPhone />
+                <p className={`${s.point_text} ${sidebarHiden && s.point_text_hiden}`}>Звонки</p>
+              </li>
+            </a> */}
+
+          <a href={'https://lk.skilla.ru/frmanager/partners'} target='_blank'>
+            <li className={`${s.point} ${s.point_tel} ${sidebarHiden && s.point_hiden} ${activePoint == 4 && s.point_tel_active}`}>
+              <IconPartners />
+              <p className={`${s.point_text} ${sidebarHiden && s.point_text_hiden}`}>Партнеры</p>
+            </li>
+          </a>
+
+          {/*   <a href={'https://lk.skilla.ru/frmanager/analytics'} target='_blank'>
+              <li className={`${s.point} ${s.point_tel} ${sidebarHiden && s.point_hiden} ${activePoint == 5 && s.point_tel_active}`}>
+                <IconAnalytics />
+                <p className={`${s.point_text} ${sidebarHiden && s.point_text_hiden}`}>Аналитика</p>
+              </li>
+            </a> */}
 
         </ul>
       </div>

@@ -1,0 +1,144 @@
+
+
+.scenario {
+    background-color: var(--color-bg-card);
+    border-radius: 8px;
+    padding: 24px 20px;
+    display: flex;
+
+
+    &__container {
+        width: 100%;
+        background-color: var(--color-bg-card-inner);
+        border-radius: 8px;
+        padding: 20px 16px;
+        display: flex;
+        flex-direction: column;
+
+    }
+
+
+    &__icon {
+        width: 20px;
+        height: 20px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin-bottom: 12px;
+        position: relative;
+        margin-right: 10px;
+
+        &_positive {
+            background: url(../../image/work/IconGood.png);
+        }
+
+
+        &_negative {
+            background: url(../../image/work/IconBad.png);
+        }
+    }
+
+    &__title {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 22px;
+        letter-spacing: 0.15px;
+        color: var(--color-text-secondary);
+        margin-bottom: 16px;
+        position: relative;
+
+        @media(max-width: 1620px) {
+            font-size: 14px;
+        }
+
+        &_dark {
+            color: #ECECEC;
+        }
+    }
+
+    &__text {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 22px; 
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        padding: 8px 12px;
+       
+
+        @media(max-width: 1620px) {
+            font-size: 14px;
+        }
+
+
+        &_question {
+            color: var(--color-text-primary);
+            max-width: 420px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-wrap: nowrap;
+        }
+
+    }
+
+    &__arrow {
+        width: 20px;
+        height: 20px;
+        transition: all 0.2s;
+    }
+
+    &__question {
+        max-height: 36px;
+        transition: all 0.4s;
+        margin-bottom: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background-color: var(--color-bg-daily);
+        border-radius: 6px;
+        height: fit-content;
+      
+
+        @media(max-width: 1620px) {
+            font-size: 14px;
+            margin-bottom: 14px;
+        }
+
+        .box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            height: 36px;
+            padding: 8px 12px;
+            
+            @media(max-width: 1620px) {
+                margin-bottom: 0;
+            }
+        }
+
+        &_open {
+            max-height: 1140px;
+        }
+
+        &_open .scenario__arrow {
+            transform: rotate(-180deg);
+        }
+    }
+
+    /* &__arrow {
+        width: 20px;
+        height: 20px;
+        background: url(../../image/icon/arrow.png);
+        transition: all 0.2s;
+
+        @media(max-width: 1620px) {
+            width: 16px;
+            height: 16px;
+            background-size: contain;
+        }
+
+        &_dark {
+            background: url(../../image/icon/arrowDark.svg);
+        }
+    } */
+}
+

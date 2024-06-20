@@ -128,7 +128,7 @@ const MyClientsSlice = createSlice({
 
         setLoadFavorite(state) {
             state.loadFavorite = false;
-        }
+        },
     },
 });
 
@@ -156,7 +156,7 @@ export const {
     setLoadPrepaid,
     setLoadFavorite,
     setAddFavorite,
-    setRemoveFavorite
+    setRemoveFavorite,
 
 } = MyClientsSlice.actions;
 

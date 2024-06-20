@@ -34,6 +34,7 @@ const Widget = ({ loadClose }) => {
     const last_connect = useSelector(selectorWork).last_connect;
     const zoom_date = useSelector(selectorWork).zoom_date;
     const message = useSelector(selectorCommand).message;
+    const callStatus = useSelector(selectorCommand).callStatus;
     const loadClient = useSelector(selectorApp).loadClient;
     const stageRoad = useSelector(selectorClient).stage;
     const [stageZoom, setStageZoom] = useState(false);
@@ -49,7 +50,7 @@ const Widget = ({ loadClose }) => {
     const [endType, setEndType] = useState('');
     const widgetHeight = useSelector(selectorWidget).height;
     const dispatch = useDispatch();
-    console.log(prevWidget, JSON.parse(localStorage.getItem('prevWidget')))
+    console.log(zoom_date, message)
 
     useEffect(() => {
         if (widget == '') {
@@ -57,16 +58,25 @@ const Widget = ({ loadClose }) => {
         }
     });
 
+    console.log(widget)
+
     useEffect(() => {
         if (widget == 'zoom' || widget == 'planZoom') {
             dispatch(setDisabledMyClients(true));
-        } else {
+            return
+        }
+
+        if (widget == 'end') {
+            dispatch(setDisabledMyClients(false));
+        }
+
+        if (widget == '') {
             dispatch(setDisabledMyClients(false));
         }
     }, [widget])
 
     useEffect(() => {
-        if (message.action == 'call_client' || message.action == 'call_client_talk') {
+        if (callStatus.action == 'new_call_out' || message.action == 'call_client_talk') {
             setWidget('call');
             setPrevWidget('call');
             localStorage.setItem('widget', JSON.stringify('call'));
@@ -86,13 +96,13 @@ const Widget = ({ loadClose }) => {
         }
 
         if (message.action == 'pause' && !planWithoutCall) {
-            setWidget('');
-            setPrevWidget('');
+           /*  setWidget('');
+            setPrevWidget(''); */
             localStorage.setItem('widget', JSON.stringify(''));
             localStorage.setItem('prevWidget', JSON.stringify(''));
             return
         }
-    }, [message]);
+    }, [message, callStatus]);
 
     useEffect(() => {
         if (stageRoad == 'setZoom' || zoom_status == 2) {
@@ -122,7 +132,7 @@ const Widget = ({ loadClose }) => {
     }, [stageRoad, zoom_status]);
 
     useEffect(() => {
-        if ((handleEmptyTask(next_connect) || next_connect == '0000-00-00 00:00:00') && handleEmptyTask(zoom_date)) {
+        if (next_connect == '0000-00-00 00:00:00'/* (handleEmptyTask(next_connect) || next_connect == '0000-00-00 00:00:00') && handleEmptyTask(zoom_date) */) {
             setEmpity(true)
         } else {
             setEmpity(false)
@@ -131,8 +141,10 @@ const Widget = ({ loadClose }) => {
 
     return (
         <div style={{ height: `${widgetHeight}px` }} className={`${s.widget}`}>
-            {widget === '' && <WidgetCall setWidget={setWidget} setPrevWidget={setPrevWidget} stageZoom={stageZoom} zoomDate={zoom_date} stageSendAnketa={stageSendAnketa} stageAnketa={stageAnketa} empty={empty} loadClose={loadClose} setPlanWithoutCall={setPlanWithoutCall} />}
-            {widget === 'call' && <WidgetWork setWidget={setWidget} setPrevWidget={setPrevWidget} setPlanWithoutCall={setPlanWithoutCall} />}
+            {widget === '' && <WidgetCall setWidget={setWidget} setPrevWidget={setPrevWidget} stageZoom={stageZoom} zoomDate={zoom_date} stageSendAnketa={stageSendAnketa}
+                                          stageAnketa={stageAnketa} stageTraining={stageTraining} empty={empty} loadClose={loadClose} setPlanWithoutCall={setPlanWithoutCall} 
+                                          message={message}/>}
+            {widget === 'call' && <WidgetWork setWidget={setWidget} setPrevWidget={setPrevWidget} setPlanWithoutCall={setPlanWithoutCall} callStatus={callStatus} message={message}/>}
             {widget === 'zoom' && <WidgetWorkZoom setWidget={setWidget} setPrevWidget={setPrevWidget} setPlanWithoutCall={setPlanWithoutCall} />}
             {widget === 'plan' && <WidgetPlan setWidget={setWidget} setPrevWidget={setPrevWidget} type={'call'} planWithoutCall={planWithoutCall} setPlanTime={setPlanTime} setPlanZoom={setPlanZoom} />}
             {widget === 'planZoom' && <WidgetPlan setWidget={setWidget} type={'zoom'} planWithoutCall={planWithoutCall} setPlanTime={setPlanTime} setPlanZoom={setPlanZoom} />}

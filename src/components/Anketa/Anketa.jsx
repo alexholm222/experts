@@ -24,7 +24,6 @@ const Anketa = () => {
     const answers = JSON.parse(anketa.answers)[0];
     const dispatch = useDispatch();
     const modalRef = useRef();
-    console.log(anketa, answers)
 
 
     useEffect(() => {
@@ -78,7 +77,7 @@ const Anketa = () => {
                     <div className={s.persondata}>
                         <div className={s.block}>
                             <span>ФИО</span>
-                            <p>{anketa.surname} {anketa.name} {anketa.midlename}</p>
+                            <p>{anketa.surname} {anketa.name} {anketa.middlename}</p>
                         </div>
 
                         <div className={s.block}>

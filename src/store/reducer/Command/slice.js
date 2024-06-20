@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     command: 'get_work_status',
     message: '',
+    callStatus: '',
 };
 
 const CommandSlice = createSlice({
@@ -17,12 +18,17 @@ const CommandSlice = createSlice({
         setMessage(state, action) {
             state.message = action.payload;
         },
+
+        setCallStatus(state, action) {
+            state.callStatus = action.payload;
+        },
     },
 });
 
 export const {
     setCommand,
-    setMessage
+    setMessage,
+    setCallStatus
 } = CommandSlice.actions;
 
 export default CommandSlice.reducer;

@@ -1,14 +1,18 @@
 import s from './ModalConfirm.module.scss';
 import { ReactComponent as IconClose } from '../../../image/iconClose.svg';
 import { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 //Api
 import { acceptAnketa, rejectAnketa, retryAnketa } from '../../../Api/Api';
 import LoaderButton from '../../LoaderButton/LoaderButton';
+//slice
+import { setClientUpdate } from '../../../store/reducer/Client/slice';
 
 const ModalConfirm = ({ confirmType, clientId, setModalConfirm, setNewAnketaState}) => {
     const [anim, setAnim] = useState(false);
     const [load, setLoad] = useState(false);
     const modalRef = useRef();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setTimeout(() => {
@@ -30,7 +34,9 @@ const ModalConfirm = ({ confirmType, clientId, setModalConfirm, setNewAnketaStat
             acceptAnketa(clientId)
             .then(res => {
                 console.log(res);
+                dispatch(setClientUpdate(clientId));
                 endLoad();
+
             })
             .catch(err => console.log(err));
             return

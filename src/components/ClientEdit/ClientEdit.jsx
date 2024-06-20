@@ -16,7 +16,7 @@ import HandleCityList from '../../utils/cityList';
 import InputTel from '../InputTel/InputTel';
 import LoaderButton from '../LoaderButton/LoaderButton';
 
-const ClientEdit = ({ handleOpenList, openList, setOpenList, setEditOpen }) => {
+const ClientEdit = ({ handleOpenList, openList, setOpenList, setEditOpen, stage }) => {
     const buttonAddHiden = useSelector(selectorClient).buttonHiden;
     const client_numbers = useSelector(selectorClient).client_numbers;
     const client_main_number = useSelector(selectorClient).client_main_number;
@@ -115,7 +115,7 @@ const ClientEdit = ({ handleOpenList, openList, setOpenList, setEditOpen }) => {
         editClient(data)
             .then(res => {
                 console.log(res);
-                
+
                 setTimeout(() => {
                     setLoad(false);
                 }, 200)
@@ -134,7 +134,8 @@ const ClientEdit = ({ handleOpenList, openList, setOpenList, setEditOpen }) => {
         <div className={`${s.edit}`}>
             <p className={s.sub}>Город</p>
             <div className={`${s.block}`}>
-                <div onClick={handleOpenList} ref={buttonRef} className={`${s.container_city} ${openList && citiesList.length > 0 && s.container_city_open}`}>
+                <div onClick={handleOpenList} ref={buttonRef}
+                    className={`${s.container_city} ${(stage == 'finishAnketa' || stage == 'signContract' || stage == 'prepaid' || stage == 'ReqTraining' || stage == 'finishTraining' || stage == 'access') && s.container_city_dis} ${openList && citiesList.length > 0 && s.container_city_open}`}>
                     <input onChange={handleInputCity} placeholder='Город' value={valueCity || ''} type='text'></input>
                     <IconChewron />
                 </div>
@@ -153,8 +154,8 @@ const ClientEdit = ({ handleOpenList, openList, setOpenList, setEditOpen }) => {
                 })}
             </div>
 
-            <button onClick={handleAddInput} className={`${s.button} ${s.button_add} ${buttonAddHiden && s.button_hiden}`}><IconPlus />Номер телефона</button>
-            <button onClick={handleSave} className={`${s.button} ${s.button_save}`}><p>Сохранить и закрыть</p> {load && <LoaderButton color={'#ffff'} />}</button>
+           {/*  <button onClick={handleAddInput} className={`${s.button} ${s.button_add} ${buttonAddHiden && s.button_hiden}`}><IconPlus />Номер телефона</button> */}
+            <button style={{marginTop: '20px'}} onClick={handleSave} className={`${s.button} ${s.button_save}`}><p>Сохранить и закрыть</p> {load && <LoaderButton color={'#ffff'} />}</button>
         </div>
     )
 };

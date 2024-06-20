@@ -9,7 +9,7 @@ import { handleDay, handleTime } from '../../utils/dates';
 import { sendComment, sendPlanTime, finishZoom } from '../../Api/Api';
 //slice
 import { setHeight } from '../../store/reducer/Widget/slice';
-import { setClientUpdate } from '../../store/reducer/Client/slice';
+import { setClientUpdate, setMenuIdUpdate } from '../../store/reducer/Client/slice';
 //selector
 import { selectorWork } from '../../store/reducer/Work/selector';
 import { selectorClient } from '../../store/reducer/Client/selector';
@@ -17,7 +17,7 @@ import { selectorClient } from '../../store/reducer/Client/selector';
 import { handleDateForPlan } from '../../utils/dates';
 
 
-const WidgetPlan = ({ setWidget, setPrevWidget,  type, planWithoutCall, setPlanTime, setPlanZoom }) => {
+const WidgetPlan = ({ setWidget, setPrevWidget, type, planWithoutCall, setPlanTime, setPlanZoom }) => {
     const [anim, setAnim] = useState(false);
     const [animItem, setAnimItem] = useState(true);
     const [time, setTime] = useState('');
@@ -42,7 +42,7 @@ const WidgetPlan = ({ setWidget, setPrevWidget,  type, planWithoutCall, setPlanT
     const timeBlockRef = useRef();
     const height = dayActive == handleDay(0).textDate ? timeBlockRef?.current?.offsetHeight : timeBlockRef?.current?.offsetHeight + 0.0001;
     const heightEl = (type == 'call' ? 316 : 250) + ((tabActive == 'zoom' && type !== 'zoom') ? 26 : 0);
-    console.log(timeArrayLength)
+
 
     useEffect(() => {
         setAnim(true)
@@ -123,7 +123,7 @@ const WidgetPlan = ({ setWidget, setPrevWidget,  type, planWithoutCall, setPlanT
 
         if (!planWithoutCall && type == 'zoom') {
             setWidget('zoom');
-          /*   setPrevWidget('zoom'); */
+            /*   setPrevWidget('zoom'); */
             localStorage.setItem('prevWidget', JSON.stringify('zoom'));
             localStorage.setItem('widget', JSON.stringify('zoom'))
             return
@@ -143,7 +143,6 @@ const WidgetPlan = ({ setWidget, setPrevWidget,  type, planWithoutCall, setPlanT
         setTimeInput(false)
         setTimeAdd('');
         const id = e.currentTarget.id;
-        console.log(id)
         setTimeActive(id)
     }
 
@@ -185,14 +184,12 @@ const WidgetPlan = ({ setWidget, setPrevWidget,  type, planWithoutCall, setPlanT
         setTooltipOpen(false)
     }
 
-    console.log(commentsForSend)
-
     const handleEndWork = () => {
         console.log(type, time, commentsForSend);
         const formData = new FormData();
         !planWithoutCall && formData.append('id', client_id);
-        !planWithoutCall &&formData.append('comment', commentsForSend.comment);
-        !planWithoutCall &&formData.append('is_sms', commentsForSend.sms ? 1 : 0);
+        !planWithoutCall && formData.append('comment', commentsForSend.comment);
+        !planWithoutCall && formData.append('is_sms', commentsForSend.sms ? 1 : 0);
         !planWithoutCall && commentsForSend?.file?.file && formData.append('screenshot', commentsForSend.file?.file);
 
         !planWithoutCall && sendComment(formData/* { id: client_id, comment: commentsForSend.comment, is_sms: commentsForSend.sms, screenshot: commentsForSend.file.file ? commentsForSend.file.file : ''} */)
@@ -202,13 +199,15 @@ const WidgetPlan = ({ setWidget, setPrevWidget,  type, planWithoutCall, setPlanT
 
 
 
-        sendPlanTime({ id: client_id, type: tabActive, next_connect: time, is_sms: tabActive == 'call' ? false : zoomSms })
+        type !== 'zoom' && sendPlanTime({ id: client_id, type: tabActive, next_connect: time, is_sms: tabActive == 'call' ? false : zoomSms })
             .then(res => {
                 console.log(res)
+                dispatch(setClientUpdate(client_id));
             })
 
         type == 'zoom' && finishZoom({ id: client_id })
             .then(res => {
+                dispatch(setMenuIdUpdate());
                 dispatch(setClientUpdate(client_id));
                 console.log(res);
             })
@@ -286,7 +285,7 @@ const WidgetPlan = ({ setWidget, setPrevWidget,  type, planWithoutCall, setPlanT
                         }
 
 
-                        {timeArrayLength > 0 && [...Array( timeArrayLength)].map((el, index) => {
+                        {timeArrayLength > 0 && [...Array(timeArrayLength)].map((el, index) => {
                             const id = tabActive === 'zoom' ? Math.ceil(timeStart) + index : timeStart + index / 2;
                             /*   if (blockTime == id) {
                                   return <div onMouseEnter={handleOpenTooltip} onMouseLeave={handleCloseTooltip} key={id} id={id} className={`${s.item} ${s.item_time} ${s.item_block} ${animItem && s.item_time_anim} ${id == timeActive && s.item_active}`}>

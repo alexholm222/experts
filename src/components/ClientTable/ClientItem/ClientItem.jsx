@@ -24,10 +24,12 @@ import { setClientId } from '../../../store/reducer/Client/slice';
 //selector
 import { selectorUpdater } from '../../../store/reducer/Updater/selector';
 import { selectorClient } from '../../../store/reducer/Client/selector';
+import { selectorApp } from '../../../store/reducer/App/selector';
 
 
 const ClientItem = ({ client, id }) => {
     const client_id = useSelector(selectorClient).client_id;
+    const disabledMyClients = useSelector(selectorApp).disabledMyClients;
     const [anim, setAnim] = useState(false);
     const [tooltip, setTooltip] = useState(false);
     const [favorite, setFavorite] = useState(false);
@@ -73,7 +75,6 @@ const ClientItem = ({ client, id }) => {
             el.type == 'ClientZoomFinish' || el.type == 'SendForm' ||
             el.type == 'ClientAnketaAccept' || el.type == 'ContractСancelled' ||
             el.type == 'ClientContractSign' || el.type == 'ClientPrepaid');
-        console.log(cleanRoad)
         const lastRoad = cleanRoad?.at(-1);
         setLastRoadDate(lastRoad?.date);
 
@@ -238,7 +239,7 @@ const ClientItem = ({ client, id }) => {
     }
 
     return (
-        <div id={id} onMouseEnter={handleViewFavorite} onMouseLeave={handleHidenFavorite} className={`${s.item} ${anim && s.item_anim} ${missedCall && s.item_attention}`}>
+        <div id={id} onMouseEnter={handleViewFavorite} onMouseLeave={handleHidenFavorite} className={`${s.item} ${disabledMyClients && s.item_disabled} ${anim && s.item_anim} ${missedCall && s.item_attention}`}>
          
                 <div onClick={handleOpenClient} className={s.empty}>
                     {missedCall && <IconMissingCall />}

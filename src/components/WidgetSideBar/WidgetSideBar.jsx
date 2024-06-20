@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 //selector
 import { selectorCommand } from '../../store/reducer/Command/selector';
+import { selectorClient } from '../../store/reducer/Client/selector';
 //slice
 import { setCommand } from '../../store/reducer/Command/slice';
 import { setClientId } from '../../store/reducer/Client/slice';
@@ -17,6 +18,7 @@ import Timer from '../../utils/Timer';
 const WidgetSideBar = ({ sidebarHiden }) => {
     const command = useSelector(selectorCommand).command;
     const message = useSelector(selectorCommand).message;
+    const client_id = useSelector(selectorClient).client_id;
     const [status, setStatus] = useState('');
     const [pause, setPause] = useState(0);
     const [timer, setTimer] = useState(0);
@@ -31,7 +33,7 @@ const WidgetSideBar = ({ sidebarHiden }) => {
             setStatus('start');
             dispatch(setClientId(''));
             localStorage.removeItem('client_id');
-            navigate(`/experts/clients`);
+            navigate(`/experts/planer`);
             return
         }
 
@@ -70,7 +72,20 @@ const WidgetSideBar = ({ sidebarHiden }) => {
             setStatus('end');
             return
         }
-    }, [message.action]);
+
+        if (message.action == 'queue_end') {
+            setStatus('queueEnd');
+            return
+        }
+    }, [message.action, client_id]);
+
+    useEffect(() => {
+        if (status == 'queueEnd') {
+            dispatch(setClientId(''));
+            localStorage.removeItem('client_id');
+            navigate(`/experts/planer`);
+        }
+    }, [status]);
 
     const handleAction = () => {
         dispatch(setCommand('get_work_status'));
@@ -104,8 +119,9 @@ const WidgetSideBar = ({ sidebarHiden }) => {
                 {status == 'work' && `Новый клиент`}
                 {status == 'call' && `Звоним`}
                 {status == 'talk' && `Разговор`}
-                {status == 'needTask' && `Клиент без задачи`} 
-                {status == 'end' && `День завершен`} 
+                {status == 'needTask' && `Клиент без задачи`}
+                {status == 'end' && `День завершен`}
+                {status == 'queueEnd' && `Звонки закончились`}
             </p>
             <div className={`${s.icon} ${(status == 'start' || status == '') && s.icon_wide}`}>
                 <div className={`${s.icon_call} ${status !== 'call' && status !== 'talk' && s.icon_call_hiden}`}>
@@ -113,7 +129,7 @@ const WidgetSideBar = ({ sidebarHiden }) => {
                     {status == 'talk' && <div className={s.icon_talk}></div>}
                 </div>
 
-                <button onClick={handleAction} className={`${s.button} ${(status == 'call' || status == 'talk' || status == 'needTask' || status == 'end') && s.button_hiden}`}>
+                <button onClick={handleAction} className={`${s.button} ${(status == 'call' || status == 'talk' || status == 'needTask' || status == 'end' || status == 'queueEnd') && s.button_hiden}`}>
                     <p className={`${s.text} ${(sidebarHiden || status !== 'start') && s.text_hiden}`}>Начать день</p>
                     {(status == 'start' || status == 'pause') && <IconPlay />}
                     {(status == 'work' || status == 'next') && <IconPause />}

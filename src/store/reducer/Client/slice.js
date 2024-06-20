@@ -12,7 +12,8 @@ const initialState = {
     clientUpdate: 0,
     menuIdUpdate: 0,
     stage: 'bp',
-    anketaAcceptDate: '0000-00-00'
+    anketaAcceptDate: '0000-00-00',
+    talkTime: 0,
 };
 /* stages =[bp, viewBp (ознакомился с БП, road status == finished), ReqZoom (запросил zoom последний лог type == ReqZoom), setZoom (записался на Zoom road status == finished), 
 finishZoom (road status == finished)] , noZoom (зумм не состоялся setZoom road status == finished берем последний лог и смотрим что время лога меньше чем текущего времени на пол часа ), 
@@ -68,18 +69,21 @@ const ClientSlice = createSlice({
             state.clientUpdate = actions.payload;
         },
 
-        setMenuIdUpdate(state, actions) {
-            state.menuIdUpdate = actions.payload;
+        setMenuIdUpdate(state) {
+            state.menuIdUpdate = state.menuIdUpdate + 1;
         },
 
         setStage(state, actions) {
-            state.stage = actions.payload;
+            state.stage = actions.payload; 
         },
 
         setAnketaAcceptDate(state, actions) {
             state.anketaAcceptDate = actions.payload;
         },
 
+        setTalkTime(state, actions) {
+            state.talkTime = actions.payload;
+        },
 
     },
 });
@@ -98,7 +102,8 @@ export const {
     setClientUpdate,
     setMenuIdUpdate,
     setStage,
-    setAnketaAcceptDate
+    setAnketaAcceptDate,
+    setTalkTime
 } = ClientSlice.actions;
 
 export default ClientSlice.reducer;

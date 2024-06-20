@@ -74,11 +74,12 @@ const WidgetReject = ({ setWidget, setPrevWidget, prevWidget, type, setStageZoom
         }
     }
 
-    const handleCancleZoom = () => {
+    const handleRejectZoom = () => {
         rejectZoom({ id: client_id, comment })
             .then(res => {
                 console.log(res);
                 setStageZoom(false);
+                dispatch(setClientUpdate(client_id));
                 setWidget('');
                 setPrevWidget('');
             })
@@ -92,7 +93,8 @@ const WidgetReject = ({ setWidget, setPrevWidget, prevWidget, type, setStageZoom
             .then(res => {
                 console.log(res);
                 setWidget('end');
-                setEndType('reject')
+                setEndType('reject');
+                
             })
             .catch(err => {
                 console.log(err)
@@ -144,7 +146,7 @@ const WidgetReject = ({ setWidget, setPrevWidget, prevWidget, type, setStageZoom
                 </div>
                 <p>Сообщить о некачественном лиде</p>
             </div>
-            {type == 'zoom' && <button disabled={comment.length == 0} onClick={handleCancleZoom} className={`${s.button}`}>Отменить встречу</button>}
+            {type == 'zoom' && <button disabled={comment.length == 0} onClick={handleRejectZoom} className={`${s.button}`}>Отменить встречу</button>}
             {type == 'reject' && <div className={s.buttons}>
                 <button onClick={handleBack} className={s.button_second}><IconBackForward /> Назад</button>
                 <button disabled={comment.length == 0} onClick={handleRejectClient} className={`${s.button} ${s.button_reject}`}>Подтвердить отказ</button>

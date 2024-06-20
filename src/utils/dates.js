@@ -311,7 +311,6 @@ export const handleDateForPlan = (d, h, m) => {
 
     const date2 = new Date();
     const minutes = h * 60 + m;
-    console.log(minutes, date2.getMinutes(), date2)
     date2.setMinutes(date2.getMinutes() + minutes);
     const year = date2.getFullYear();
     const month = date2.getMonth() + 1;
@@ -414,12 +413,15 @@ export const handleDifDateZoom = (d) => {
     const date = new Date(d);
     const dateNow = new Date();
     const diffDays = (dateNow - date) / (1000 * 60);
-   console.log(dateNow, date,  diffDays)
-    if(diffDays > 60) {
+
+    if (d == null || !d) {
+        return false
+    }
+    if (diffDays > 60) {
         return true
     }
 
-    if(diffDays <= 60) {
+    if (diffDays <= 60) {
         return false
     }
 }
@@ -429,7 +431,6 @@ export const handleDateStudyReq = (d) => {
     const mo = d?.slice(3, 5);
     const da = d?.slice(0, 2);
     const ye = d?.slice(-4)
-    console.log(da, mo, ye)
     const date = new Date(`${ye}-${mo}-${da}`);
     const month = date.getMonth();
     const day = date.getDate();
@@ -503,4 +504,40 @@ export const handleDateFormat = (d) => {
     const year = date.getFullYear();
 
     return `${day > 10 ? day : `0${day}`}.${month > 10 ? month : `0${month}`}.${year}`
+}
+
+export const handleTotalCallTime = (d) => {
+
+    const hour = Math.trunc(d / 3600);
+    const minutes = Math.trunc((d % 3600) / 60);
+
+    return `${hour > 0 ? `${hour}ч` : ''} ${minutes == 0 ? '' : `${minutes}м`}`
+}
+
+export const handleDatePartnerOffice = (month) => {
+
+    let fMonth;
+    switch (month) {
+        case 1: fMonth = "января"; break;
+        case 2: fMonth = "февраля"; break;
+        case 3: fMonth = "марта"; break;
+        case 4: fMonth = "апреля"; break;
+        case 5: fMonth = "мая"; break;
+        case 6: fMonth = "июня"; break;
+        case 7: fMonth = "июля"; break;
+        case 8: fMonth = "августа"; break;
+        case 9: fMonth = "сентября"; break;
+        case 10: fMonth = "октября"; break;
+        case 11: fMonth = "ноября"; break;
+        case 12: fMonth = "декабря"; break;
+        default:
+    }
+    return fMonth
+
+}
+
+export const handleDayWeek = () => {
+  const date = new Date();
+  var dayNum = date.getDay();
+  return dayNum;
 }

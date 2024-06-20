@@ -2,7 +2,8 @@
     width: 100%;
     display: grid;
     grid-template-areas: 'left right'
-        'left scenario';
+        'left city'
+        'left scenario'; 
     grid-template-columns: 468px 1fr;
     grid-template-rows: min-content auto;
     gap: 20px;
@@ -49,10 +50,15 @@
         gap: 20px;
     }
 
+    &_city {
+        grid-area: city;
+        display: flex;
+        justify-content: center;
+    }
+
     &_scenario {
         grid-area: scenario;
         align-self: flex-start;
-        height: 100px;
         display: flex;
         justify-content: center;
     }

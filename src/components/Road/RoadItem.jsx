@@ -27,14 +27,14 @@ function RoadItem({ type, name, date, loadClose, loadVisible, idCheck, lastCheck
                     {type == 'yellow' && <YellowPoint />}
                     {type == 'enabled' && <ProcessPoint />}
                     {type == 'processLong' && <ProcessLongPoint />}
-                    {type == 'finished' && lastCheck !== date + name && <CheckPoint />}
-                    {type == 'finished' && lastCheck == date + name && <PointCheck />}
+                    {type == 'finished' && lastCheck !== name && <CheckPoint />}
+                    {type == 'finished' && lastCheck == name && <PointCheck />}
                     <p>{name}</p>
                 </div>
                
             </div>
             <div className={s.loader}>
-                <span className={`${loadClose && s.hide2n}`}>{handleDateDifference(date)}</span>
+                <span>{type !== 'disabled' && handleDateDifference(date)}</span>
               
             </div>
         </li>

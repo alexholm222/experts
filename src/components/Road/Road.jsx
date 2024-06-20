@@ -13,6 +13,7 @@ import { setStage, setAnketaAcceptDate } from '../../store/reducer/Client/slice'
 import { setAnketaForm } from '../../store/reducer/Work/slice';
 //component
 import RoadSceleton from './RoadSceleton/RoadSceleton';
+import Material from './Material/Material';
 //utils
 import { handleDifDateZoom, handleDateStudyReq } from '../../utils/dates';
 /* stages =[bp, viewBp (ознакомился с БП, road status == finished), ReqZoom (запросил zoom последний лог type == ReqZoom), setZoom (записался на Zoom road status == finished), 
@@ -22,18 +23,19 @@ sendAnketa(смотрим если последний лог type == SendForm), 
 
 function Road({ loadClose, loadVisible }) {
     const road = Object.values(useSelector(selectorWork).road).slice(4, 12);
-    console.log(road)
+    const materials = Object.values(useSelector(selectorWork).road)[2];
     const client_id = useSelector(selectorClient).client_id;
     const clientUpdate = useSelector(selectorClient).clientUpdate;
+    const menuIdUpdate = useSelector(selectorClient).menuIdUpdate;
     const zoom_date = useSelector(selectorWork).zoom_date;
     const stage = useSelector(selectorClient).stage;
     const [lastCheck, setLastChek] = useState(15);
     const [openList, setOpenList] = useState(false);
     const dispatch = useDispatch();
-    console.log(stage, zoom_date)
+    console.log(road)
 
     useEffect(() => {
-        if (road[0]?.status == 'finished' && road[1]?.status == 'disabled' && road[1]?.logs.length == 0) {
+        if (road[0]?.status == 'finished' && road[1]?.logs.length == 0) {
             dispatch(setStage('viewBp'));
             return
         }
@@ -43,7 +45,7 @@ function Road({ loadClose, loadVisible }) {
             return
         }
 
-        if (road[1]?.status == 'finished' && road[2]?.status !== 'finished' && !handleDifDateZoom(zoom_date)) {
+        if (road[1]?.status == 'finished' && road[2]?.status !== 'finished' && road[1]?.logs.length > 0 && !handleDifDateZoom(zoom_date)) {
             dispatch(setStage('setZoom'));
             return
         }
@@ -96,8 +98,8 @@ function Road({ loadClose, loadVisible }) {
 
     useEffect(() => {
         if (road[3]?.status == 'finished') {
-            const acceptLog = road[3]?.logs.find(el => el.type == 'ClientAnketaAccept');
-            dispatch(setAnketaAcceptDate(acceptLog.date));
+            const acceptLog = road[3]?.logs?.find(el => el.type == 'ClientAnketaAccept');
+            dispatch(setAnketaAcceptDate(road[3]?.date));
             return
         }
     }, [road]);
@@ -105,7 +107,7 @@ function Road({ loadClose, loadVisible }) {
     useEffect(() => {
         const sendAnketaLog = road[3]?.logs.find(el => el.type == 'SendForm')
         if (sendAnketaLog) {
-                getAnketa(client_id)
+            getAnketa(client_id)
                 .then(res => {
                     console.log(res);
                     const anketa = res.data.anketa;
@@ -118,13 +120,11 @@ function Road({ loadClose, loadVisible }) {
 
     useEffect(() => {
         if (client_id == clientUpdate) {
-            setTimeout(() => {
-                const checkNum = road.findLast(el => el.status == 'finished');
-                setLastChek(checkNum?.date + checkNum?.name);
-            }, 500);
-            return
+            console.log('обновление роад')
+            const checkNum = road.findLast(el => el.status == 'finished');
+            setLastChek(checkNum?.name);
         }
-    }, [clientUpdate]);
+    }, [menuIdUpdate, client_id]);
 
 
     const handleOpenList = () => {
@@ -136,33 +136,43 @@ function Road({ loadClose, loadVisible }) {
     }
     return (
         <div className={s.road}>
+           {/*  <Material materials={materials} /> */}
             <ul className={`${s.list} ${openList && s.list_open}`}>
+
                 {road.map((el, index) => {
                     let status = 'disabled';
                     let name = '';
+                    let date = '';
 
                     if (index == 1 && stage == 'viewBp') {
                         status = 'disabled';
                         name = el.name;
+                        date = el.date;
                     } else if (index == 1 && stage == 'ReqZoom') {
                         status = 'yellow';
                         name = 'Клиент запросил Zoom';
+                        date = road[1]?.logs[0]?.date;
                     } else if (index == 2 && stage == 'noZoom') {
                         status = 'fail';
                         name = 'Zoom не состоялся';
+                        date = el.date;
                     } else if (index == 3 && stage == 'sendAnketa') {
                         status = 'yellow';
                         name = 'Проверь анкету клиента';
+                        date = el.date;
                     } else if (index == 6 && stage == 'ReqTraining') {
                         status = el.status;
                         name = `Обучение ${handleDateStudyReq(road[6]?.logs[0]?.comment.slice(-10))?.date}`;
+                        date = el.date;
                     } else {
                         status = el.status;
                         name = el.name;
+                        date = el.date;
                     }
 
-                    return <RoadItem key={index} name={name} type={status} date={el.date}
+                    return <RoadItem key={index} name={name} type={status} date={date}
                         idCheck={el.status == 'finished' && index} lastCheck={lastCheck}
+                        stage={stage}
                     />
                 })
                 }

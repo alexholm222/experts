@@ -160,9 +160,18 @@
 
 .loader {
     position: relative;
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
 
 .hiden {
    opacity: 0;
    transition: all 0.1s ease-in-out;
+}
+
+.time {
+    font-size: 14px;
+    margin-top: 2px;
+    color: var(--color-text-secondary);
 }

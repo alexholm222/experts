@@ -59,10 +59,10 @@ const InputTel = ({ id, selectTel, setSelectTel, el }) => {
                 </div>
             </div>
             <div className={`${s.input} ${telAdded && s.input_disabled}`}>
-                <InputMask disabled={telAdded ? true : false} mask="+7 (999)-999-9999" onChange={handleTel} value={valueTel || ''}>
+                <InputMask disabled={telAdded ? true : false} mask="+7 (999)-999-99-99" onChange={handleTel} value={valueTel || ''}>
                     {() => <input
                         type="tel"
-                        placeholder="+7 (___)-___-____"
+                        placeholder="+7 (___)-___-__-__"
                     />}
                 </InputMask>
             </div>
