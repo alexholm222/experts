@@ -7,7 +7,7 @@ const AnimEnd = () => {
             autoplay
             loop
             src={cat}
-            style={{ height: '38px', width: '38px', marginBottom: '11px' }}
+            style={{ height: '48px', width: '48px', marginBottom: '0' }}
             controls={true}
         >
         </Player>

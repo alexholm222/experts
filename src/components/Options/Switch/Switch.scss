@@ -1,0 +1,29 @@
+.switch {
+    width: 34px;
+    height: 20px;
+    border-radius: 40px;
+    background-color: rgba(173, 191, 223, 0.4);
+    box-sizing: border-box;
+    padding: 3px;
+    transition: all 0.2s;
+    cursor: pointer;
+
+    &_on {
+        background-color: var(--color-button-accent);
+
+        .inner {
+            transform: translateX(14px);
+        }
+    }
+
+   
+}
+
+.inner {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #ffff;
+    transition: all 0.2s;
+}
+

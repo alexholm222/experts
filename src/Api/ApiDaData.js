@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-export const baseUrl = "http://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/okved2";
-export const baseUrl2 = "http://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party";
+export const baseUrl = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/okved2";
+export const baseUrl2 = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party";
 
 const instanceWithToken = axios.create({
     withCredentials: false,

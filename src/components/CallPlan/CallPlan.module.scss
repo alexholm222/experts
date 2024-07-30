@@ -1,16 +1,17 @@
 .plan {
     width: 100%;
-    min-height: 716px;
-    padding: 20px 16px;
+    min-height: 880px;
+    padding: 20px 0;
     box-sizing: border-box;
     background-color: var(--color-bg-full);
     border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    transition: all 0.4s ease-in-out;
+    transition: all 0.2s ease-in-out;
     overflow: hidden;
     position: relative;
+    height: max-content;
 }
 
 .header {
@@ -18,6 +19,8 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 12px;
+    padding: 0 16px;
+    position: relative;
 }
 
 .title {
@@ -85,8 +88,14 @@
     position: relative;
     overflow: hidden;
     padding-top: 8px;
+    padding: 0 16px 20px;
+    overflow: auto;
 
-  
+    &_overflow {
+        overflow: hidden;
+    }
+
+
 
     h3 {
         color: var(--color-text-secondary);
@@ -102,8 +111,8 @@
     &_big {
         font-size: 20px;
         line-height: 140%;
-        margin-top: -16px;
-       
+        margin-top: 0;
+
         p,
         h3 {
             font-size: 20px;
@@ -128,11 +137,56 @@
     }
 
     &_load {
+
         h3,
         p {
             opacity: 0;
-            transition: all 0.2s ease-in-out;
+            /*  transition: all 0.2s ease-in-out; */
         }
 
+    }
+}
+
+.text::-webkit-scrollbar {
+    visibility: hidden;
+    transition: all 0.2;
+    width: 3px;
+}
+
+.text::-webkit-scrollbar {
+    transition: all 0.2;
+    visibility: visible;
+
+}
+
+.text::-webkit-scrollbar-track {
+    background: var(--color-bg-full);
+}
+
+.text::-webkit-scrollbar-thumb {
+    background-color: var(--color-button-disabled);
+    border-radius: 4px;
+
+}
+
+.button {
+    position: absolute;
+    color: var(--color-text-secondary);
+    top: 2px;
+    cursor: pointer;
+    left: 150px;
+    transition: all 0.2s;
+
+    svg path {
+        fill: var(--color-text-secondary);
+    }
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    &_up {
+        transform: rotate(180deg);
+        top: 0;
     }
 }

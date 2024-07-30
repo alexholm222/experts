@@ -25,7 +25,7 @@ const Planer = () => {
         })
     }, []);
 
-    
+    console.log(planer)
 
     useEffect(() => {
         const days = Object.keys(planer);

@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     offices: [],
     companies: [],
+    companiesNum: [],
 };
 
 const PartnersSlice = createSlice({
@@ -17,12 +18,17 @@ const PartnersSlice = createSlice({
         setCompanies(state, action) {
             state.companies = action.payload;
         },
+
+        setCompaniesNum(state, action) {
+            state.companiesNum = action.payload;
+        },
     },
 });
 
 export const {
     setOffices,
-    setCompanies
+    setCompanies,
+    setCompaniesNum
 } = PartnersSlice.actions;
 
 export default PartnersSlice.reducer;

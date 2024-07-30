@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import s from './ClientsList.module.scss';
 import { ReactComponent as IconSearch } from '../../image/iconSearch.svg';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 //selector
 import { selectorMyClients } from '../../store/reducer/MyClients/selector';
+//slice
+import { setTodayNextPage, setClientsTodayAdd, setClientsNewAdd, setNewNextPage, setPlanMeetingAdd, setPlanNextPage, setNoTaskNextPage, setClientsNoTaskAdd } from '../../store/reducer/MyClients/slice';
 //components
 import ClientTable from '../ClientTable/ClientsTable';
 import ClientTableSceleton from '../ClientTableSceleton/ClientTableSceleton';
+import AnimEnd from '../AnimEnd/AnimEnd';
 //utils
 import { handleFilterObject } from '../../utils/filter';
 //API 
@@ -18,9 +21,15 @@ const ClientsList = ({ activeTab }) => {
     const clientsTodayNum = myClients.todayNum;
     const clientsTodayPath = myClients.todayNextPage;
     const clientsNew = myClients.new;
-    const noTask = myClients.no_task;
+    const clientsNewNum = myClients.newNum;
+    const clientsNewPath = myClients.newNextPage;
+    const noTask = myClients.noTask;
+    const noTaskNum = myClients.noTaskNum;
+    const noTaskNextPage = myClients.noTaskNextPage;
     const archive = myClients.archive;
     const planMeeting = myClients.plan_meeting;
+    const planNum = myClients.planNum;
+    const planNextPage = myClients.planNextPage;
     const zoom = myClients.zoom;
     const anketa = myClients.anketa;
     const contract = myClients.contract;
@@ -30,10 +39,11 @@ const ClientsList = ({ activeTab }) => {
     const [clients, setClients] = useState(clientsToday || []);
     const [clientsPrev, setClientsPrev] = useState([]);
     const [activeTabList, setActiveTabList] = useState(1);
+    const [load, setLoad] = useState(false);
     const [query, setQuery] = useState('');
-    const throttleInProgress = useRef();
+    const timerDebounceRef = useRef();
     const listRef = useRef();
-
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setTimeout(() => {
@@ -95,6 +105,10 @@ const ClientsList = ({ activeTab }) => {
 
     }, [activeTabList, activeTab, clientsToday, clientsNew, noTask, archive, planMeeting, zoom, anketa, contract, prepaid, favorite]);
 
+    useEffect(() => {
+        handleNextPageLoad()
+    }, [activeTabList, clientsTodayPath, clientsNewPath, planNextPage])
+
 
     const handleActiveTab = (e) => {
         const id = e.currentTarget.id;
@@ -114,35 +128,103 @@ const ClientsList = ({ activeTab }) => {
     }
 
     const handleNextPageLoad = () => {
-        if (activeTabList == 1 && clientsTodayPath) {
-            getMyClientsPagination(clientsTodayPath, 'today')
+        if (activeTabList == 1 && clientsTodayPath && clientsTodayPath !== '' && clientsTodayNum > 50) {
+            setLoad(true);
+            console.log('клиенты сегодня')
+            getMyClientsPagination(clientsTodayPath, 'today', 'default')
                 .then(res => {
-                    console.log(res)
+                    console.log(res);
+                    const data = res.data.data;
+
+                    dispatch(setTodayNextPage(data.next_page_url));
+                    setTimeout(() => {
+                        dispatch(setClientsTodayAdd(data.data));
+                        setLoad(false);
+                    }, 400)
+
                 })
-                .catch(err => console.log(err))
-        }
-    }
-
-    const scrollLoad = () => {
-       /*  const load = listRef?.current?.getBoundingClientRect()?.bottom - window.innerHeight < 800;
-        load && handleNextPageLoad(); */
-    }
-
-    const handleThrottleScroll = () => {
-        if (throttleInProgress.current) {
+                .catch(err => console.log(err));
             return
         }
-        throttleInProgress.current = true;
-        setTimeout(() => {
-            scrollLoad()
-            throttleInProgress.current = false;
-        }, 1800);
+
+        if (activeTabList == 2 && clientsNewPath !== null && clientsNewPath !== '' && clientsNewNum > 50) {
+            setLoad(true);
+            getMyClientsPagination(clientsNewPath, 'new', 'default')
+                .then(res => {
+                    console.log(res);
+                    const data = res.data.data;
+
+                    dispatch(setNewNextPage(data.next_page_url));
+                    dispatch(setClientsNewAdd(data.data));
+                    setTimeout(() => {
+
+                        setLoad(false);
+                    }, 100)
+
+                })
+                .catch(err => console.log(err));
+            return
+        }
+
+        if (activeTabList == 3 && noTaskNextPage !== null && noTaskNextPage !== '' && noTaskNum > 50) {
+            setLoad(true);
+            getMyClientsPagination(noTaskNextPage, 'new', 'default')
+                .then(res => {
+                    console.log(res);
+                    const data = res.data.data;
+                    dispatch(setNoTaskNextPage(data.next_page_url));
+                    dispatch(setClientsNoTaskAdd(data.data));
+                    setTimeout(() => {
+
+                        setLoad(false);
+                    }, 100)
+
+                })
+                .catch(err => console.log(err));
+            return
+        }
+
+        if (activeTabList == 5 && planNextPage && planNextPage !== '' && planNum > 50) {
+            setLoad(true);
+            getMyClientsPagination(planNextPage, 'plan_meeting', 'default')
+                .then(res => {
+                    console.log(res);
+                    const data = res.data.data;
+
+                    dispatch(setPlanNextPage(data.next_page_url));
+                    setTimeout(() => {
+                        dispatch(setPlanMeetingAdd(data.data));
+                        setLoad(false);
+                    }, 100)
+
+                })
+                .catch(err => console.log(err));
+            return
+        }
     }
 
-    useEffect(() => {
-        window.addEventListener('scroll', handleThrottleScroll);
-        return () => window.removeEventListener('scroll', handleThrottleScroll)
-    }, [activeTabList]);
+    /*    const scrollLoad = () => {
+           const loadScroll = listRef?.current?.getBoundingClientRect()?.bottom - window.innerHeight < 300;
+           console.log(load)
+           !load && loadScroll && handleNextPageLoad();
+       }
+   
+       function handleDebounceScroll() {
+          
+           if (timerDebounceRef.current) {
+               clearTimeout(timerDebounceRef.current);
+           }
+         
+           timerDebounceRef.current = setTimeout(() => {
+               
+               scrollLoad()
+           }, 300);
+       }
+   
+       useEffect(() => {
+           window.addEventListener('scroll', handleDebounceScroll);
+           return () => window.removeEventListener('scroll', handleDebounceScroll)
+       }, [activeTabList, clientsTodayPath, clientsNewPath, planNextPage, load]); */
 
     return (
         <>
@@ -157,17 +239,17 @@ const ClientsList = ({ activeTab }) => {
                         <div onClick={handleActiveTab} id='1' className={`${s.tab} ${activeTabList == 1 && s.tab_active} ${clientsTodayNum == 0 && s.tab_disabled}`}>
                             <p>Сегодня</p><sup>{clientsTodayNum == 0 ? '' : clientsTodayNum}</sup>
                         </div>
-                        <div onClick={handleActiveTab} id='2' className={`${s.tab} ${activeTabList == 2 && s.tab_active} ${clientsNew.length == 0 && s.tab_disabled}`}>
-                            <p>Новые</p><sup>{clientsNew.length == 0 ? '' : clientsNew.length}</sup>
+                        <div onClick={handleActiveTab} id='2' className={`${s.tab} ${activeTabList == 2 && s.tab_active} ${clientsNewNum == 0 && s.tab_disabled}`}>
+                            <p>Новые</p><sup>{clientsNew == 0 ? '' : clientsNewNum}</sup>
                         </div>
-                        <div onClick={handleActiveTab} id='3' className={`${s.tab} ${activeTabList == 3 && s.tab_active} ${noTask.length == 0 && s.tab_disabled}`}>
-                            <p>Без задач</p><sup>{noTask.length == 0 ? '' : noTask.length}</sup>
+                        <div onClick={handleActiveTab} id='3' className={`${s.tab} ${activeTabList == 3 && s.tab_active} ${noTaskNum == 0 && s.tab_disabled}`}>
+                            <p>Без задач</p><sup>{noTaskNum == 0 ? '' : noTaskNum}</sup>
                         </div>
                         <div onClick={handleActiveTab} id='4' className={`${s.tab} ${activeTabList == 4 && s.tab_active} ${archive.length == 0 && s.tab_disabled}`}>
                             <p>В архив</p><sup>{archive.length == 0 ? '' : archive.length}</sup>
                         </div>
-                        <div onClick={handleActiveTab} id='5' className={`${s.tab} ${activeTabList == 5 && s.tab_active} ${planMeeting.length == 0 && s.tab_disabled}`}>
-                            <p>Планирование встречи</p><sup>{planMeeting.length == 0 ? '' : planMeeting.length}</sup>
+                        <div onClick={handleActiveTab} id='5' className={`${s.tab} ${activeTabList == 5 && s.tab_active} ${planNum == 0 && s.tab_disabled}`}>
+                            <p>Планирование встречи</p><sup>{planNum == 0 ? '' : planNum}</sup>
                         </div>
                         <div onClick={handleActiveTab} id='6' className={`${s.tab} ${activeTabList == 6 && s.tab_active} ${zoom.length == 0 && s.tab_disabled}`}>
                             <p>Проведен Zoom</p><sup>{zoom.length == 0 ? '' : zoom.length}</sup>
@@ -183,7 +265,8 @@ const ClientsList = ({ activeTab }) => {
                         </div>
                     </div>
                 </div>
-                <ClientTable clients={clients} activeTab={activeTab} activeTabList={activeTabList} />
+                <ClientTable clients={clients} activeTab={activeTab} activeTabList={activeTabList} load={load} />
+                {/*  {load && <AnimEnd />} */}
             </div>
             {activeTabList == 1 && <ClientTableSceleton load={myClients.loadToday} />}
             {activeTabList == 2 && <ClientTableSceleton load={myClients.loadNew} />}

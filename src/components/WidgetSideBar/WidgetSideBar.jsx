@@ -31,14 +31,15 @@ const WidgetSideBar = ({ sidebarHiden }) => {
     useEffect(() => {
         if (message.action == 'not_work') {
             setStatus('start');
-            dispatch(setClientId(''));
+           /*  dispatch(setClientId('')); */
             localStorage.removeItem('client_id');
-            navigate(`/experts/planer`);
+          /*   navigate(`/experts/planer`); */
             return
         }
 
         if ((message.action == 'open_client' && message.need_task !== 1) || message.action == 'wait_client') {
             setStatus('work');
+           /*  navigate(`/experts/work`); */
             return
         }
 
@@ -57,10 +58,10 @@ const WidgetSideBar = ({ sidebarHiden }) => {
             return
         }
 
-        if (message.action == 'next_client') {
+       /*  if (message.action == 'next_client') {
             setTimerNext(message.timer_min * 60 + message.timer_sec)
             setStatus('next');
-        }
+        } */
 
         if (message.action == 'pause') {
             setStatus('pause');
@@ -70,6 +71,7 @@ const WidgetSideBar = ({ sidebarHiden }) => {
 
         if (message.action == 'end_work') {
             setStatus('end');
+            navigate(`/experts/work`); 
             return
         }
 
@@ -81,9 +83,7 @@ const WidgetSideBar = ({ sidebarHiden }) => {
 
     useEffect(() => {
         if (status == 'queueEnd') {
-            dispatch(setClientId(''));
-            localStorage.removeItem('client_id');
-            navigate(`/experts/planer`);
+            /* navigate(`/experts/planer`); */
         }
     }, [status]);
 

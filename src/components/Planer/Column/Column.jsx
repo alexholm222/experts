@@ -2,7 +2,7 @@ import s from './Column.module.scss';
 //components 
 import PlanerItem from '../PlanerItem/PlanerItem';
 //utils
-import { handleDatePlaner, handleDateZoomDiff } from '../../../utils/dates';
+import { handleDatePlaner, handleDateZoomDiff, handleDiffDate } from '../../../utils/dates';
 import { useEffect, useState } from 'react';
 
 const Column = ({plan, date}) => {
@@ -22,8 +22,8 @@ const Column = ({plan, date}) => {
         const planArr = [...plan];
         planArr.sort(function (a, b) {
           
-            const dateA = handleDateZoomDiff(a.zoom_date, date) ? new Date(a?.zoom_date): new Date(a?.next_connect);
-            const dateB = handleDateZoomDiff(b.zoom_date, date) ? new Date(b?.zoom_date): new Date(b?.next_connect);
+            const dateA = handleDiffDate(a.zoom_date, a?.next_connect) ? new Date(a?.zoom_date): new Date(a?.next_connect);
+            const dateB = handleDiffDate(b.zoom_date, b?.next_connect) ? new Date(b?.zoom_date): new Date(b?.next_connect);
             if (dateA > dateB) {
                 return 1
             }

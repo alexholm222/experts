@@ -39,7 +39,7 @@ const Client = ({ loadClose, loadVisible }) => {
 
   //убрать - 36 когда вернешь добовление номера
     useEffect(() => {
-        setHeightBlock(322 - 36 + (client_numbers.length == 1 ? 46 : (client_numbers.length - 1) * 54 + 46) - (buttonAddHiden ? 20 - 36 : 0))
+        setHeightBlock(322 + (client_numbers.length == 1 ? 46 : (client_numbers.length - 1) * 54 + 46) - (buttonAddHiden ? 20 : 0))
     }, [client_numbers, buttonAddHiden])
 
     useEffect(() => {

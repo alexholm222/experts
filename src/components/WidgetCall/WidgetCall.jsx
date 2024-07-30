@@ -9,6 +9,7 @@ import { ReactComponent as IconZoom } from '../../image/work/widget/iconZoom.svg
 import { ReactComponent as IconCancleZoom } from '../../image/work/widget/iconCancleZoom.svg';
 import { ReactComponent as IconAnketa } from '../../image/work/widget/iconAnketa.svg';
 import { ReactComponent as IconClose } from '../../image/iconClose.svg';
+import { ReactComponent as IconComment } from '../../image/work/widget/iconComment.svg';
 //Api
 import { callClient } from '../../Api/Api';
 //selector
@@ -26,6 +27,7 @@ import { handleDatePlan, handleDateZoomDiff2, handleDateAnketa } from '../../uti
 const WidgetCall = ({ setWidget, setPrevWidget, stageZoom, zoomDate, stageSendAnketa, stageAnketa, stageTraining, empty, loadClose, setPlanWithoutCall, message }) => {
     const next_connect = useSelector(selectorWork).next_connect;
     const zoom_date = useSelector(selectorWork).zoom_date;
+    const client_id = useSelector(selectorClient).client_id;
     const client_main_number = useSelector(selectorClient).client_main_number;
     const anketaAcceptDate = useSelector(selectorClient).anketaAcceptDate;
     const [anim, setAnim] = useState(false);
@@ -53,7 +55,7 @@ const WidgetCall = ({ setWidget, setPrevWidget, stageZoom, zoomDate, stageSendAn
         localStorage.removeItem('tab');
         localStorage.removeItem('sms');
         setDialing(true);
-        callClient(client_main_number)
+        callClient(client_main_number, client_id)
             .then(res => console.log(res))
             .catch(err => console.log(err));
         /* setWidget('call');
@@ -101,6 +103,10 @@ const WidgetCall = ({ setWidget, setPrevWidget, stageZoom, zoomDate, stageSendAn
         setModalCancel(true)
     }
 
+    const handleComment = () => {
+        setWidget('comment')
+    }
+
     return (
         <div className={`${s.call} ${anim && s.call_anim}`}>
             <div className={s.container}>
@@ -116,10 +122,12 @@ const WidgetCall = ({ setWidget, setPrevWidget, stageZoom, zoomDate, stageSendAn
                 {stageAnketa && <button onClick={handleOpenAnketa} className={s.button_small}><p>{'Анкета'} {handleDateAnketa(anketaAcceptDate)}</p></button>}
             </div>
             <div className={s.buttons}>
+                
                 {!empty && !stageZoom && <button onClick={handlePlanContact} className={s.button_small}><p>Запланировать заново</p> <IconGoToBack /></button>}
                 {stageZoom && <button onClick={handleCancelZoom} className={s.button_small}><p>Отменить Zoom</p> <IconCancleZoom /></button>}
                 {empty && !stageZoom && <button onClick={handlePlanContact} className={s.button_small}><p>Запланировать контакт</p> <IconCalendar /></button>}
-                <button onClick={handleHandOver} className={s.button_small}><p>Передать клиента</p> <IconPersonAdding /></button>
+                <button onClick={handleComment} className={s.button_small}><p>Комментарий</p> <IconComment /></button>
+          {/*       <button onClick={handleHandOver} className={s.button_small}><p>Передать клиента</p> <IconPersonAdding /></button> */}
             </div>
 
             {modalCancel && <ModalConfirm setModalCancel={setModalCancel} />}

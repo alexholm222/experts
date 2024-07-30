@@ -1,0 +1,62 @@
+.audio {
+    width: 260px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+}
+
+.button {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    svg path {
+        fill: var(--color-button-voice);
+    }
+}
+
+.progress {
+    width: 186px;
+    height: 3px;
+    background-color: var(--color-progress-voice);
+    position: relative;
+}
+
+.inner {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background-color: var(--color-button-voice);
+    z-index: 2;
+    transition: all 0.2s;
+}
+
+.point {
+   /*  position: absolute; */
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-button-voice);
+ 
+   
+
+    &_anim {
+        transition: all 0.2s;
+    }
+}
+
+.time {
+    position: absolute;
+    left: 46px;
+    bottom: 8px;
+    font-size: 10px;
+}

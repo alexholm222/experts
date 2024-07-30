@@ -1,13 +1,13 @@
 .clientsList {
     width: 100%;
-    filter: blur(0.5px);
+   /*  filter: blur(0.5px); */
     opacity: 0;
     transition: all 0.15s;
     position: relative;
     overflow: hidden;
 
     &_anim {
-        filter: blur(0);
+      /*   filter: blur(0); */
         opacity: 1;
     }
 }
@@ -53,6 +53,10 @@
     flex-shrink: 0;
     overflow: hidden;
 
+    p {
+        transition: all 0.2s;
+    }
+
     sup {
         font-size: 12px;
         font-weight: 400;
@@ -61,7 +65,10 @@
         opacity: 0.5;
         margin-left: 4px;
         margin-top: 6px;
-        transition: all 0.2s;
+        transition: all 0.5s;
+        max-width: 20px;
+        width: fit-content;
+        opacity: 1;
     }
 
     &:hover {
@@ -71,6 +78,7 @@
     &_active {
         color: var(--color-text-primary);
         background-color: var(--color-bg-daily);
+       ;
 
         sup {
             opacity: 0.8;
@@ -83,9 +91,15 @@
 
     &_disabled {
         pointer-events: none;
-
         p {
             opacity: 0.6;
+        }
+
+        sup {
+            width: 0; 
+            max-width: 0;
+            opacity: 0;
+            margin-left: 0;
         }
     }
 

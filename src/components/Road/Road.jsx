@@ -32,7 +32,6 @@ function Road({ loadClose, loadVisible }) {
     const [lastCheck, setLastChek] = useState(15);
     const [openList, setOpenList] = useState(false);
     const dispatch = useDispatch();
-    console.log(road)
 
     useEffect(() => {
         if (road[0]?.status == 'finished' && road[1]?.logs.length == 0) {
@@ -109,7 +108,6 @@ function Road({ loadClose, loadVisible }) {
         if (sendAnketaLog) {
             getAnketa(client_id)
                 .then(res => {
-                    console.log(res);
                     const anketa = res.data.anketa;
                     dispatch(setAnketaForm(anketa));
                 })
@@ -120,7 +118,6 @@ function Road({ loadClose, loadVisible }) {
 
     useEffect(() => {
         if (client_id == clientUpdate) {
-            console.log('обновление роад')
             const checkNum = road.findLast(el => el.status == 'finished');
             setLastChek(checkNum?.name);
         }

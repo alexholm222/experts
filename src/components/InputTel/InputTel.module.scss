@@ -6,10 +6,10 @@
     background-color: var(--color-bg-card);
     display: flex;
     transition: all 0.4s ease-in-out;
-    overflow: hidden;
     margin-bottom: 0;
     opacity: 0;
     transform: scale(0);
+    border: 1px solid #e75a5a00;
 
     &_anim {
         height: 46px;
@@ -24,6 +24,10 @@
 
     input {
         width: 100%;
+    }
+
+    &_error {
+        border: 1px solid #E75A5A;
     }
 }
 
@@ -126,4 +130,45 @@
         transform: scale(0.2);
         pointer-events: none;
     }
+}
+
+.delete {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    &_hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+.error {
+    position: absolute;
+    bottom: -18px;
+   color: #E75A5A;
+   opacity: 0;
+   visibility: hidden;
+   transition: all 0.15s;
+
+   p {
+    font-size: 12px;
+   }
+
+   &_open {
+    opacity: 1;
+    visibility: visible;
+   }
+   
 }

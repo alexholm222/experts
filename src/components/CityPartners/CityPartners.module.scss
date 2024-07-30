@@ -1,7 +1,27 @@
+.window {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    h3 {
+        margin: 0;
+    }
+}
+
 .container {
     width: 100%;
     display: flex;
     gap: 20px;
+    transition: all 0.3s;
+    position: relative;
 }
 
 .block {
@@ -9,6 +29,15 @@
     background-color: var(--color-bg-card-inner);
     border-radius: 8px;
     padding: 20px;
+    position: relative;
+   
+
+    &_city {
+        width: 30%;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+    }
 }
 
 .title {
@@ -34,4 +63,103 @@
     margin: 0;
     padding: 0;
     list-style-type: none;
+
+    &_sceleton {
+        position: absolute;
+        left: 20px;
+        top: 58px;
+        width: calc(100% - 40px);
+        opacity: 1;
+        visibility: visible;
+        background-color: var(--color-bg-card-inner);
+
+        &_hiden {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+}
+
+
+.container_city {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+    height: 46px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--color-bg-card-inner);
+    border-radius: 4px;
+
+    &_open {
+        svg {
+            transform: rotate(180deg);
+        }
+    }
+
+    svg {
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    svg path {
+        fill: var(--color-button-disabled);
+    }
+
+    &_dis {
+        pointer-events: none;
+        background-color: var(--color-bg-daily);
+    }
+
+    input {
+        background: none;
+        color: var(--color-text-primary);
+    }
+}
+
+
+.list_city {
+    position: absolute;
+    left: 0;
+    top: 44px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 0;
+    transition: max-height 0.2s ease-in-out, height 0.2s ease-in-out;
+    background-color: var(--color-bg-card-inner);
+    z-index: 12;
+    border-radius: 0 0 4px 4px;
+    max-height: 0;
+    height: fit-content;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+
+    &_open {
+        max-height: 266px;
+        box-shadow: var( --box-shadow2);
+    }
+
+    &_scroll {
+        overflow-y: scroll;
+    }
+}
+
+.item_city {
+    width: 100%;
+    padding: 8px 14px;
+    box-sizing: border-box;
+    cursor: pointer;
+    line-height: 22px;
+
+    &:hover {
+        background-color: var(--color-bg-disabled);
+    }
 }

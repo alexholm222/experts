@@ -10,21 +10,26 @@ import Widget from '../Widget/Widget';
 import Anketa from '../Anketa/Anketa';
 import CityPartners from '../CityPartners/CityPartners';
 import Scenario from '../Scenario/Scenario';
+import WelcomeScreen from '../WelcomeScreen/WelcomeScreen';
+import Messenger from '../Messenger/Messenger';
 //selector
 import { selectorApp } from '../../store/reducer/App/selector';
 import { selectorClient } from '../../store/reducer/Client/selector';
 import { selectorWork } from '../../store/reducer/Work/selector';
+import { selectorCommand } from '../../store/reducer/Command/selector';
 
-const Work = ({ sidebarHiden, scenario }) => {
+const Work = ({ sidebarHiden, scenario, theme }) => {
     const [anim, setAnim] = useState(false);
     const [loadClose, setLoadClose] = useState(true);
     const [loadVisible, setLoadVisible] = useState(true);
+    const [callButtonAdd, setCallButtonAdd] = useState(false);
     const dispatch = useDispatch();
     const loadPage = useSelector(selectorApp).loadPage;
     const loadClient = useSelector(selectorApp).loadClient;
     const client_id = useSelector(selectorClient).client_id;
     const openAnketa = useSelector(selectorWork).anketaOpen;
-    console.log(openAnketa)
+    const message = useSelector(selectorCommand).message;
+    console.log(message)
 
     useEffect(() => {
         setTimeout(() => {
@@ -35,7 +40,7 @@ const Work = ({ sidebarHiden, scenario }) => {
     useEffect(() => {
         setTimeout(() => {
             setAnim(true)
-        }, 100)
+        })
     }, []);
 
     useEffect(() => {
@@ -62,16 +67,23 @@ const Work = ({ sidebarHiden, scenario }) => {
             </div>
             <div className={`${s.block} ${s.block_right}`}>
                 <CallPlan loadClose={loadClose} loadVisible={loadVisible} sidebarHiden={sidebarHiden} />
-                <Widget loadClose={loadClose} />
+                <div className={s.conteiner}>
+                    <Widget loadClose={loadClose} setCallButtonAdd={setCallButtonAdd}/>
+                    <Messenger loadClose={loadClose} theme={theme} callButtonAdd={callButtonAdd}/>
+                </div>
+
             </div>
             <div className={`${s.block} ${s.block_city}`}>
                 <CityPartners />
             </div>
 
             <div className={`${s.block} ${s.block_scenario}`}>
-                <Scenario scenario={scenario}/>
+                <Scenario scenario={scenario} />
             </div>
+
+
             {openAnketa && <Anketa />}
+            {(message.action == 'not_work' || message.action == 'end_work') && <WelcomeScreen action={message.action} />}
         </div>
     )
 };

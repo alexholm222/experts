@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    expert: {}
+    expert: JSON.parse(localStorage.getItem('expert')) || {}
 };
 
 const ExpertSlice = createSlice({

@@ -1,0 +1,53 @@
+@mixin img-hover {
+  transition: background-color 0.3s ease;
+  position: relative;
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 7, 41, 0.4);
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+
+  &::after {
+    content: url("data:image/svg+xml;charset=UTF-8,%3csvg width='22' height='22' viewBox='0 0 22 22' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21 21L15.2857 15.2857M9.57143 6V13.1429M6 9.57143H13.1429M9.57143 18.1429C4.83756 18.1429 1 14.3053 1 9.57143C1 4.83756 4.83756 1 9.57143 1C14.3053 1 18.1429 4.83756 18.1429 9.57143C18.1429 14.3053 14.3053 18.1429 9.57143 18.1429Z' stroke='white' stroke-width='2'/%3e%3c/svg%3e ");
+    width: max-content;
+    height: max-content;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    &::before,
+    &:after {
+      opacity: 1;
+    }
+  }
+}
+
+@mixin img-size {
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+@mixin d-flex {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+

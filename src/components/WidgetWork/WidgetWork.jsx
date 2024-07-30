@@ -196,7 +196,7 @@ const WidgetWork = ({ setWidget, setPrevWidget, setPlanWithoutCall, callStatus, 
 
     const handleCall = () => {
         setDialing(true)
-        callClient(client_main_number)
+        callClient(client_main_number, client_id)
             .then(res => console.log(res))
             .catch(err => console.log(err));
     }
@@ -229,7 +229,7 @@ const WidgetWork = ({ setWidget, setPrevWidget, setPlanWithoutCall, callStatus, 
                 <button disabled={comment.length == 0} onClick={handleOpenPlan} className={`${s.button} ${tab == '' && s.button_margin}`}>Далее</button>
                 <div className={s.container}>
                     <button onClick={handleCancelZoom} className={s.button_small}><p>Клиент отказался</p> <IconCancel /></button>
-                    <button onClick={handleHandOver} className={s.button_small}><p>Передать клиента</p> <IconPersonAdding /></button>
+                  {/*   <button onClick={handleHandOver} className={s.button_small}><p>Передать клиента</p> <IconPersonAdding /></button> */}
                 </div>
                 <div className={`${s.block_add} ${callStatus.action !== 'end_call_out' && s.block_hiden}`}>
                     <button onClick={handleCall} className={`${s.button} ${s.button_minor} ${dialing && s.button_anim}`}><p>

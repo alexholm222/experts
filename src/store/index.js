@@ -9,6 +9,9 @@ import WorkSlice from './reducer/Work/slice';
 import CommandSlice from './reducer/Command/slice'; 
 import ExpertSlice from './reducer/Expert/slice';
 import PartnersSlice from './reducer/Partners/slice';
+import lkCalendarSlice from '../block/CalendarEvent/store/reducer/lk/calendar/slice';
+import MessengerSlice from './reducer/Messenger/slice';
+import StatisticSlice from './reducer/Statistic/slice';
 
 export const rootReducer = combineReducers({
   AppSlice,
@@ -20,7 +23,10 @@ export const rootReducer = combineReducers({
   WorkSlice,
   CommandSlice,
   ExpertSlice,
-  PartnersSlice
+  PartnersSlice,
+  lkCalendarSlice,
+  MessengerSlice,
+  StatisticSlice
 });
 
 export const store = configureStore({

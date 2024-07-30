@@ -49,7 +49,7 @@ export const getPlaner = () => {
 
 export const getClientInformation = (id) => {
     return instanceWithToken.get(`${baseUrl}api/frmanager/clients/detail/${id}`);
-    
+
 }
 
 export const editClient = (data) => {
@@ -63,11 +63,37 @@ export const editClient = (data) => {
         url: `${baseUrl}api/frmanager/clients/edit`,
         data: data,
     })
-} 
+}
+
+export const deleteNumber = (phone) => {
+    return instanceWithToken({
+        method: 'delete',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/frmanager/clients/phone`,
+        data: {phone},
+    })
+}
+
+export const checkPhone = (phone) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/frmanager/clients/phone/check`,
+        data: {phone},
+    })
+}
 
 //звонок клиенту и последующая работа
-export const callClient = (phone) => {
-    return instanceWithToken.post(`${baseUrl}api/frmanager/clients/call_mango?phone=${phone}`);
+export const callClient = (phone, id) => {
+    return instanceWithToken.post(`${baseUrl}api/frmanager/clients/call_mango?phone=${phone}&id=${id}`);
 }
 
 export const sendComment = (data) => {
@@ -81,7 +107,7 @@ export const sendComment = (data) => {
         url: `${baseUrl}api/frmanager/clients/send_comment`,
         data: data,
     })
-} 
+}
 
 export const sendPlanTime = (data) => {
     return instanceWithToken({
@@ -94,7 +120,7 @@ export const sendPlanTime = (data) => {
         url: `${baseUrl}api/frmanager/clients/plan_call`,
         data: data,
     })
-} 
+}
 
 
 export const finishZoom = (data) => {
@@ -108,7 +134,7 @@ export const finishZoom = (data) => {
         url: `${baseUrl}api/frmanager/clients/finish_zoom`,
         data: data,
     })
-} 
+}
 
 export const rejectZoom = (data) => {
     return instanceWithToken({
@@ -121,7 +147,7 @@ export const rejectZoom = (data) => {
         url: `${baseUrl}api/frmanager/clients/reject_zoom`,
         data: data,
     })
-} 
+}
 
 export const rejectClient = (data) => {
     return instanceWithToken({
@@ -134,7 +160,7 @@ export const rejectClient = (data) => {
         url: `${baseUrl}api/frmanager/clients/reject`,
         data: data,
     })
-} 
+}
 
 export const transferClient = (data) => {
     return instanceWithToken({
@@ -147,7 +173,7 @@ export const transferClient = (data) => {
         url: `${baseUrl}api/frmanager/clients/transfer`,
         data: data,
     })
-} 
+}
 
 //анкета
 export const getAnketa = (id) => {
@@ -163,7 +189,7 @@ export const acceptAnketa = (id) => {
             "Accept": "application/json"
         },
         url: `${baseUrl}api/frmanager/clients/anketa/accept`,
-        data: {id},
+        data: { id },
     })
 }
 
@@ -176,7 +202,7 @@ export const rejectAnketa = (id) => {
             "Accept": "application/json"
         },
         url: `${baseUrl}api/frmanager/clients/anketa/reject`,
-        data: {id},
+        data: { id },
     })
 }
 
@@ -189,7 +215,7 @@ export const retryAnketa = (id) => {
             "Accept": "application/json"
         },
         url: `${baseUrl}api/frmanager/clients/anketa/retry`,
-        data: {id},
+        data: { id },
     })
 }
 
@@ -203,20 +229,90 @@ export const cancelTraning = (id) => {
             "Accept": "application/json"
         },
         url: `${baseUrl}api/frmanager/clients/reject_train`,
-        data: {id},
+        data: { id },
     })
 }
 
-export const getPartners = (client_id) => {
-    return instanceWithToken.get(`${baseUrl}api/frmanager/clients/info_companies/${client_id}`);
+export const getPartners = (client_id, city) => {
+    return instanceWithToken.get(`${baseUrl}api/frmanager/clients/info_companies?${client_id !== '' ? `id=${client_id}` : ''}${city !== '' ? `city=${city}` : ''}`);
 }
 
 export const getScenario = () => {
     return instanceWithToken.get(`${baseUrl}api/frmanager/clients/scripts`);
 }
- 
 
 
+//whats up
+export const getCurrentStateInstance = () => {
+    return instanceWithToken.get(`${baseUrl}api/frmanager/chat/instance/state`);
+}
 
+export const getRebootInstance = () => {
+    return instanceWithToken.get(`${baseUrl}api/frmanager/chat/instance/reboot`);
+}
 
+export const getMessageHistory = (phone, count) => {
+    return instanceWithToken.get(`${baseUrl}api/frmanager/chat/history?phone=${phone}&count=${count}`);
+}
 
+//отправка сообщения
+
+export const sendMessage = (phone, message) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/frmanager/chat/send/message`,
+        data: { phone, message },
+    })
+}
+
+//Проверка номера на наличие whatsup
+export const chatCheck = (phone) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/frmanager/chat/check`,
+        data: { phone },
+    })
+}
+
+//Прочитать чат
+export const chatRead = (phone, id) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/frmanager/chat/read`,
+        data: { phone, message_id: null, client_id: String(id) },
+    })
+}
+
+//отправить файлы
+export const sendFile = (data) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "multipart/form-data",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/frmanager/chat/send/file/upload`,
+        data: data,
+    })
+}
+
+//Статистика эксперта
+export const getExpertStatic = (id, date) => {
+    return instanceWithToken.get(`${baseUrl}api/frmanager/statistics?manager_id=${id}&date=${date}`);
+}

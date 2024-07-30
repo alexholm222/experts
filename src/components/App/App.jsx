@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import s from './App.module.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 //websocet
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 //API
-import { getCities, getClientInformation, getPlaner, getPartners, getScenario } from '../../Api/Api';
+import { getCities, getClientInformation, getPlaner, getPartners, getScenario, getExpertStatic, getManagerInfo } from '../../Api/Api';
 //components
 import SideBar from '../SideBar/SideBar';
 import Container from '../Container/Container';
@@ -14,6 +16,9 @@ import { setLoadPage } from '../../store/reducer/App/slice';
 //selector
 import { selectorCommand } from '../../store/reducer/Command/selector';
 import { selectorClient } from '../../store/reducer/Client/selector';
+import { selectorWork } from '../../store/reducer/Work/selector';
+import { selectorApp } from '../../store/reducer/App/selector';
+import { selectorExpert } from '../../store/reducer/Expert/selector';
 //slice
 import { setCities } from '../../store/reducer/Work/slice';
 import { setMessage, setCallStatus, setCommand } from '../../store/reducer/Command/slice';
@@ -28,17 +33,56 @@ import {
     setFavorite,
     setClientUpdate,
     setMenuIdUpdate,
-    setTalkTime
+    setTalkTime,
+    setMissCall,
+    setCallMe,
+    setClientStatus,
+    setDayWithoutMove
 } from '../../store/reducer/Client/slice';
-import { setLoadClient } from '../../store/reducer/App/slice';
+import { setLoadClient, setLoadPartners } from '../../store/reducer/App/slice';
 import { setComments, setDialog, setRoad, setNextConnect, setZoomStatus, setZoomConnect, setLastConnect } from '../../store/reducer/Work/slice';
 import { setPlaner, setPlanerLoad } from '../../store/reducer/Planer/slice';
-import { setOffices, setCompanies } from '../../store/reducer/Partners/slice';
+import { setOffices, setCompanies, setCompaniesNum } from '../../store/reducer/Partners/slice';
+import { setMessageMessanger, setMessageStatus, setNotification, setNotifications } from '../../store/reducer/Messenger/slice';
+import { setExpert } from '../../store/reducer/Expert/slice';
+import { setLoadManager } from '../../store/reducer/App/slice';
+import { setStatisticToday } from '../../store/reducer/Statistic/slice';
+//utils
+import { handleDifDate, handleDateToday2 } from '../../utils/dates';
+
+
+//сокеты whats app
+const userToken = document.getElementById('root_expert').getAttribute('token');
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.REACT_APP_PUSHER_APP_KEY,
+    wsHost: process.env.REACT_APP_PUSHER_APP_HOST,
+    wssPort: 6001,
+    forceTLS: true,
+    disableStats: true,
+    cluster: "mt1",
+    encrypted: true,
+    enabledTransports: ['ws', 'wss'],
+    authEndpoint: `${process.env.REACT_APP_API_URL}api/broadcasting/auth`,
+    auth: {
+        headers: {
+            Authorization: `Bearer ${userToken}`,
+            Accept: "application/json"
+        }
+    }
+});
 
 const App = () => {
     const mangoToken = document.getElementById('root_expert').getAttribute('mango-token');
     const command = useSelector(selectorCommand).command;
     const callStatus = useSelector(selectorCommand).callStatus;
+    const workInfoUpdate = useSelector(selectorWork).workInfoUpdate;
+    const message = useSelector(selectorCommand).message;
+    const themeApp = useSelector(selectorApp).theme;
+    const loadClient = useSelector(selectorApp).loadClient;
+    const expertInfo = useSelector(selectorExpert).expert;
     const [scenario, setScenario] = useState([]);
     const [socketUrl, setSocketUrl] = useState(`wss://lk.skilla.ru:8007/?user=${mangoToken}`);
     const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl,
@@ -53,8 +97,9 @@ const App = () => {
             },
         });
     const [messageHistory, setMessageHistory] = useState([]);
+    const [messageSocket, setMessageSocket] = useState({});
     const [sidebarHiden, setSideBarHiden] = useState(false);
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState(JSON.parse(localStorage.getItem('theme')) || 'dark');
     const [activePoint, setActivePoint] = useState(JSON.parse(localStorage.getItem('point')) || 1);
     const client_id = useSelector(selectorClient).client_id;
     const clientUpdate = useSelector(selectorClient).clientUpdate;
@@ -64,6 +109,8 @@ const App = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const path = location.pathname;
+    const dateToday = handleDateToday2();
+    const monthToday = handleDateToday2().slice(0, 7);
 
 
     const connectionStatus = {
@@ -74,7 +121,6 @@ const App = () => {
         [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
     }[readyState];
 
-    console.log(callStatus)
 
     useEffect(() => {
         sendMessage(JSON.stringify({
@@ -84,21 +130,68 @@ const App = () => {
     }, [command]);
 
 
-
     useEffect(() => {
         if (lastMessage !== null) {
-            /* setMessageHistory((prev) => prev.concat(lastMessage.data)); */
             const message = JSON.parse(lastMessage.data);
             console.log(message)
             dispatch(setMessage(message));
             dispatch(setCommand('get_work_status'));
-            (message.action == 'wait_client' || message.action == 'open_client') && dispatch(setClientId(message.client_id));
-            (message.action == 'wait_client' || message.action == 'open_client') && localStorage.setItem('client_id', JSON.stringify(message.client_id));
+            (message.action == 'wait_client' || message.action == 'open_client') && navigate(`/experts/work/client=${message.client_id}`);
             message.action == 'client_update' && dispatch(setClientUpdate(message.client_id));
             message.action == 'client_update' && dispatch(setMenuIdUpdate());
+            message.action == 'next_client' && dispatch(setCommand('pause'));
+
 
         }
     }, [lastMessage]);
+
+
+    //сообщения whats up
+    useEffect(() => {
+        const channel = window.Echo.private(`clients.${mangoToken}`)
+            .listen('.whatsapp', (e) => {
+                console.log('Event received:', e.whatsapp);
+                setMessageSocket(e.whatsapp)
+            });
+
+        return () => {
+            channel.stopListening('.whatsapp');
+            window.Echo.leave('clients');
+        };
+    }, []);
+
+    useEffect(() => {
+        const data = messageSocket?.data;
+        const client = messageSocket?.client;
+
+        data?.typeWebhook == 'incomingMessageReceived' && client.id == client_id && dispatch(setMessageMessanger({
+            clientId: client.id, data: {
+                idMessage: data.idMessage,
+                messageData: data.messageData,
+            }
+        }));
+
+        data?.typeWebhook == 'incomingMessageReceived' && dispatch(setNotification({
+            client: client, data: {
+                idMessage: data.idMessage,
+                messageData: data.messageData,
+            }
+        }));
+
+        data?.typeWebhook == 'incomingMessageReceived' && dispatch(setNotifications({
+            client: client, data: {
+                idMessage: data.idMessage,
+                messageData: data.messageData,
+            }
+        }));
+
+        data?.typeWebhook == 'outgoingMessageStatus' && client.id == client_id && dispatch(setMessageStatus({
+            clientId: client.id,
+            idMessage: data.idMessage,
+            status: data.status,
+        }))
+
+    }, [messageSocket])
 
     //Слушатель сокета статуса звонка
     useEffect(() => {
@@ -112,17 +205,28 @@ const App = () => {
             dispatch(setCallStatus(data));
             if (data.action == 'new_call_out') {
                 const id = Number(data.client_id)
-                dispatch(setClientId(id));
-                localStorage.setItem('client_id', JSON.stringify(id))
+                navigate(`/experts/work/client=${id}`)
+                return
+            }
+
+            if (data.action == 'end_call_out') {
+                dispatch(setCommand('pause'))
+                return
             }
         });
     }, []);
+
 
     useEffect(() => {
         setTimeout(() => {
             dispatch(setLoadPage(false))
         }, 700)
     }, [])
+
+    useEffect(() => {
+        setTheme(themeApp);
+        localStorage.setItem('theme', JSON.stringify(themeApp));
+    }, [themeApp])
 
     //установка системной темы
     useEffect(() => {
@@ -134,18 +238,53 @@ const App = () => {
     }, [theme])
     document.documentElement.dataset.theme = theme;
 
-    //Тайтл вкладки
+    //загрузка клиента
     useEffect(() => {
-        if (path == '/experts/work' || path == '/') {
-            setActivePoint(1);
-            document.title = `...`;
+        const currentUrl = window.location.href;
 
-            setTimeout(() => {
-                document.title = `${clientName} ${clientCity}`;
-            }, 200)
-
+        if (path.includes('/work/client=')) {
+            const idClientUrl = Number(path.split('/work/client=').pop());
+            dispatch(setClientId(idClientUrl));
+            navigate(`/experts/work/client=${idClientUrl}`);
             return
         }
+
+        if (currentUrl.includes('/?id=')) {
+            const idClientUrl = Number(currentUrl.split('/?id=').pop());
+            dispatch(setClientId(idClientUrl));
+            navigate(`/experts/work/client=${idClientUrl}`);
+            return
+        }
+    }, [path])
+
+    //Тайтл вкладки
+    useEffect(() => {
+        const currentUrl = window.location.href;
+
+        if (path == '/') {
+            document.title = 'Планер';
+            setActivePoint(3);
+            return
+        }
+
+        if (path == '') {
+            document.title = '...';
+            return
+        }
+
+        if (path.includes('/work/client=')) {
+            setActivePoint(1);
+            loadClient ? document.title = `...` : document.title = `${clientName} ${clientCity}`
+            return
+        }
+
+        if (currentUrl.includes('/?id=')) {
+            setActivePoint(1);
+            document.title = `...`;
+            loadClient ? document.title = `...` : document.title = `${clientName} ${clientCity}`
+            return
+        }
+
 
         if (path == '/experts/clients' || path == '/experts/clients/') {
             document.title = 'Мои клиенты';
@@ -153,25 +292,25 @@ const App = () => {
             return
         }
 
-        if (path == '/experts/planer' || path == '/experts/planer/') {
+        if (path == '/experts/planer' || path == '/experts/planer/' /* || '/' */) {
             document.title = 'Планер';
             setActivePoint(3);
             return
         }
 
-        if (path == '/frmanager/partners' || path == '/frmanager/partners/') {
-            document.title = 'Партнеры';
+        if (path == '/experts/calendar' || path == '/experts/calendar/') {
+            document.title = 'Календарь событий';
             setActivePoint(4);
             return
         }
 
-        if (path == '/frmanager/analytics' || path == '/frmanager/analytics/') {
-            document.title = 'Аналитика';
+        if (path == '/experts/options' || path == '/experts/options/') {
+            document.title = 'Настройки';
             setActivePoint(5);
             return
         }
 
-    }, [path, clientName]);
+    }, [path, clientName, loadClient]);
 
 
 
@@ -197,6 +336,10 @@ const App = () => {
         dispatch(setNextConnect('0000-00-00'));
         dispatch(setZoomStatus(-1));
         dispatch(setZoomConnect('0000-00-00'));
+        dispatch(setClientName(''));
+        dispatch(setClientSurname(''));
+        /*  dispatch(setClientName(''));
+         dispatch(setClientCity('')); */
 
         client_id !== '' && getClientInformation(client_id)
             .then(res => {
@@ -213,6 +356,10 @@ const App = () => {
                 dispatch(setClientMain(phone[0]));
                 dispatch(setFavorite(client.favorite));
                 dispatch(setTalkTime(client.talk_time));
+                client.events_call !== 0 ? dispatch(setMissCall(true)) : dispatch(setMissCall(false));
+                client.is_call_me !== 0 ? dispatch(setCallMe(true)) : dispatch(setCallMe(false));
+
+                dispatch(setClientStatus(client.status))
                 //записываем комментарии клиента
                 const comments = client?.partnership_client_logs?.filter(el => el.is_manual == 1 && el.person_id !== 0 && el.comment !== '' && el.newsletter_id == 0 && el.is_sms == 0).reverse();
                 dispatch(setComments(comments));
@@ -224,18 +371,22 @@ const App = () => {
                 dispatch(setLastConnect(client.last_connect));
                 dispatch(setZoomStatus(client.zoom_status));
                 dispatch(setZoomConnect(client.zoom_date));
+                const lastMoves = Object.values(road).findLast((el, i) => el.status == 'finished' && i < 10);
+                dispatch(setDayWithoutMove(handleDifDate(lastMoves.date)))
 
                 setTimeout(() => {
                     dispatch(setLoadClient(false));
-                }, 150);
+                });
             })
             .catch(err => console.log(err));
     }, [client_id]);
 
+    console.log(client_id, clientUpdate)
 
     //обновляем Road
     useEffect(() => {
-        client_id == clientUpdate && getClientInformation(client_id)
+        dispatch(setNumbersDefault([]));
+        client_id == clientUpdate && client_id !== '' && getClientInformation(client_id)
             .then(res => {
                 console.log(res)
                 const client = res.data.client;
@@ -249,6 +400,10 @@ const App = () => {
                 dispatch(setNumbersDefault(phone));
                 dispatch(setClientMain(phone[0]));
                 dispatch(setFavorite(client.favorite));
+                client.events_call !== 0 ? dispatch(setMissCall(true)) : dispatch(setMissCall(false));
+                //записываем комментарии клиента
+                const comments = client?.partnership_client_logs?.filter(el => el.is_manual == 1 && el.person_id !== 0 && el.comment !== '' && el.newsletter_id == 0 && el.is_sms == 0).reverse();
+                dispatch(setComments(comments));
                 //Записываем скрипт
                 dispatch(setDialog(dialog));
                 //Записываем Road
@@ -257,12 +412,12 @@ const App = () => {
                 dispatch(setLastConnect(client.last_connect));
                 dispatch(setZoomStatus(client.zoom_status));
                 dispatch(setZoomConnect(client.zoom_date));
-
                 dispatch(setClientUpdate(0));
+
                 setTimeout(() => {
 
                     dispatch(setLoadClient(false));
-                }, 150);
+                });
             })
             .catch(err => console.log(err))
     }, [clientUpdate]);
@@ -272,6 +427,7 @@ const App = () => {
         getPlaner()
             .then(res => {
                 const data = res.data;
+                console.log('Планер', res)
                 dispatch(setPlaner(data));
                 setTimeout(() => {
                     dispatch(setPlanerLoad(false))
@@ -282,18 +438,26 @@ const App = () => {
 
     //Получаем данные партнерских офисов
     useEffect(() => {
-        getPartners(client_id)
+        dispatch(setLoadPartners(true))
+        client_id !== '' && getPartners(client_id, '')
             .then(res => {
-                const offices = res.data.partner_offices;
-                const companies = res.data.companies;
+                console.log(res)
+                const data = res.data;
+                const offices = data.partner_offices;
+                const companies = data.companies_info.companies;
+                const companiesNum = data.companies_info.total;
                 //записываем информацию о партнерских оффисах и заказчиках
                 dispatch(setOffices(offices));
                 dispatch(setCompanies(companies));
-                console.log(res)
+                dispatch(setCompaniesNum(companiesNum));
+                setTimeout(() => {
+                    dispatch(setLoadPartners(false));
+                }, 50);
             })
             .catch(err => console.log(err))
-    }, [client_id]);
+    }, [client_id, workInfoUpdate]);
 
+    //Получаем скрипт
     useEffect(() => {
         getScenario()
             .then(res => {
@@ -305,14 +469,47 @@ const App = () => {
             .catch(err => console.log(err))
     }, [])
 
+    //Получаем данные эксперта
     useEffect(() => {
-        client_id == '' && navigate(`/experts/planer`);
-    }, [client_id])
+        getManagerInfo()
+            .then(res => {
+                const data = res.data.data;
+                const expert = { name: data.name, surname: data.surname, avatar: data.avatar, id: data.id }
+                localStorage.setItem('expert', JSON.stringify(expert))
+                console.log(res)
+                dispatch(setExpert(expert));
+                dispatch(setLoadManager(false));
+            })
+            .catch(err => console.log(err))
+    }, []);
+
+    //Получаем статистику эксперта
+    useEffect(() => {
+        expertInfo.id && getExpertStatic(expertInfo.id, monthToday)
+            .then(res => {
+                console.log(res);
+                const data = res.data.data;
+                const zoomArr = data.zoom;
+                const anketaArr = data.anketa_send;
+                const prepayArr = data.prepay;
+                const zoomToday = zoomArr.find(el => el.date == dateToday);
+                const anketaToday = anketaArr.find(el => el.date == dateToday);
+                const prepayToday = prepayArr.find(el => el.date == dateToday);
+                dispatch(setStatisticToday({
+                    zoom: zoomToday,
+                    anketa: anketaToday,
+                    prepay: prepayToday
+                }))
+            })
+            .catch(err => console.log(err))
+    }, [expertInfo])
+
+    console.log(dateToday)
 
     return (
         <div className={s.app}>
             <SideBar sidebarHiden={sidebarHiden} setSideBarHiden={setSideBarHiden} path={path} activePoint={activePoint} />
-            <Container sidebarHiden={sidebarHiden} scenario={scenario}/>
+            <Container sidebarHiden={sidebarHiden} scenario={scenario} theme={theme} />
         </div>
     )
 };

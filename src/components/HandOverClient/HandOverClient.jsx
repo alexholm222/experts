@@ -1,6 +1,7 @@
 import s from './HandOverClient.module.scss';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { ReactComponent as IconBackForward } from '../../image/work/widget/iconBackForward.svg';
 //Api
 import { transferClient } from '../../Api/Api';
@@ -36,7 +37,8 @@ const HandOverWidget = ({setWidget, prevWidget, setEndType}) => {
             console.log(res);
             setWidget('end');
             setEndType('handOver');
-            setLoader(false)
+            setLoader(false);
+            
         })
         .catch(err => console.log(err))
        

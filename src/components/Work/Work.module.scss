@@ -3,17 +3,17 @@
     display: grid;
     grid-template-areas: 'left right'
         'left city'
-        'left scenario'; 
+        'left scenario';
     grid-template-columns: 468px 1fr;
     grid-template-rows: min-content auto;
     gap: 20px;
-   /*  filter: blur(0.5px); */
-    transition: all 0.3s ease-in-out;
+    transition: all 0.15s;
     position: relative;
     overflow: hidden;
+    opacity: 0;
 
     &_anim {
-    /*     filter: blur(0); */
+        opacity: 1;
     }
 
     @media(min-width: 2100px) {
@@ -62,4 +62,12 @@
         display: flex;
         justify-content: center;
     }
+}
+
+.conteiner {
+    min-width: 444px;
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }

@@ -1,13 +1,13 @@
 .clients {
     width: 100%;
-    filter: blur(0.5px);
+   /*  filter: blur(0.5px); */
     transition: all 0.3s ease-in-out;
     position: relative;
    /*  overflow: hidden; */
     min-height: 900px;
 
     &_anim {
-        filter: blur(0);
+        /* filter: blur(0); */
     }
 }
 

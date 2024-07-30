@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTimer } from 'react-timer-hook';
 
-const Timer = ({ expiryTimestamp, setTimer, status }) => {
+const Timer = ({ expiryTimestamp, setTimer, status, rebut }) => {
     const {
         totalSeconds,
         seconds,
@@ -15,23 +15,30 @@ const Timer = ({ expiryTimestamp, setTimer, status }) => {
         restart,
     } = useTimer({ expiryTimestamp, onExpire: () => console.warn('onExpire called') });
 
- 
+
     useEffect(() => {
-        if(status == 'pause') {
+        if (status == 'pause') {
             setTimer(hours * 60 + minutes);
             return
         }
 
     }, [hours, minutes])
 
-    
+
     useEffect(() => {
-        if(status == 'end') {
+        if (status == 'end') {
             setTimer(seconds);
             return
         }
 
     }, [seconds])
+
+    useEffect(() => {
+        const time = new Date();
+        time.setSeconds(time.getSeconds() + 5)
+        console.log(time, rebut)
+        rebut > 0 && restart(time);
+    }, [rebut])
 
     return (
         <></>

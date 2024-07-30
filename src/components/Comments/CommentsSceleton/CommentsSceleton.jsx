@@ -11,7 +11,7 @@ const CommentsSceleton = ({loadClose}) => {
     }, [loadClose])
 
     return (
-        <div className={`${s.overlay} ${loadComments && s.overlay_vis}`}>
+        <div className={`${s.overlay} ${loadClose && s.overlay_vis}`}>
             <div className={`${s.comments}`}>
 
 

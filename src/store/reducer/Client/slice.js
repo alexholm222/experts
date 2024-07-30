@@ -4,7 +4,7 @@ const initialState = {
     buttonHiden: false,
     client_numbers: [],
     client_main_number: '',
-    client_id: JSON.parse(localStorage.getItem('client_id')) || '',
+    client_id: '',
     client_name: '',
     client_surname: '',
     client_city: '',
@@ -14,6 +14,10 @@ const initialState = {
     stage: 'bp',
     anketaAcceptDate: '0000-00-00',
     talkTime: 0,
+    missCall: false,
+    callMe: false,
+    clientStatus: 1,
+    dayWithoutMove: 0,
 };
 /* stages =[bp, viewBp (ознакомился с БП, road status == finished), ReqZoom (запросил zoom последний лог type == ReqZoom), setZoom (записался на Zoom road status == finished), 
 finishZoom (road status == finished)] , noZoom (зумм не состоялся setZoom road status == finished берем последний лог и смотрим что время лога меньше чем текущего времени на пол часа ), 
@@ -35,6 +39,10 @@ const ClientSlice = createSlice({
 
         setNumbers(state, action) {
             state.client_numbers = [...state.client_numbers, action.payload];
+        },
+
+        setDeleteNumber(state, action) {
+            state.client_numbers = [...state.client_numbers.filter(el => el !== action.payload)];
         },
 
         setNumbersDefault(state, action) {
@@ -85,6 +93,22 @@ const ClientSlice = createSlice({
             state.talkTime = actions.payload;
         },
 
+        setMissCall(state, action) {
+            state.missCall = action.payload;
+        },
+
+        setCallMe(state, action) {
+            state.callMe = action.payload;
+        },
+
+        setClientStatus(state, action) {
+            state.clientStatus = action.payload;
+        },
+        
+        setDayWithoutMove(state, action) {
+            state.dayWithoutMove = action.payload;
+        },
+        
     },
 });
 
@@ -92,6 +116,7 @@ export const {
     setTelCount,
     setButtonHiden,
     setNumbers,
+    setDeleteNumber,
     setNumbersDefault,
     setClientMain,
     setClientId,
@@ -103,7 +128,11 @@ export const {
     setMenuIdUpdate,
     setStage,
     setAnketaAcceptDate,
-    setTalkTime
+    setTalkTime,
+    setMissCall,
+    setCallMe,
+    setClientStatus,
+    setDayWithoutMove
 } = ClientSlice.actions;
 
 export default ClientSlice.reducer;

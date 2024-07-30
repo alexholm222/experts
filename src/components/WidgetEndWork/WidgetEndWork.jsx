@@ -56,10 +56,14 @@ const WidgetEndWork = ({ planTime, planZoom, setWidget, endType, setEndType }) =
     }, [timer]);
 
     useEffect(() => {
-        if((endType == 'handOver' || endType == 'reject') && timer == 0)
-        dispatch(setClientId(''));
-        localStorage.setItem('client_id', JSON.stringify(''));
-        navigate(`/experts/work`); 
+        if((endType == 'handOver' || endType == 'reject') && timer == 0) {
+            dispatch(setClientId(''));
+            localStorage.setItem('client_id', JSON.stringify(''));
+            setTimeout(() => {
+                navigate(`/experts/planer`)
+            }, 200)
+            
+        }
     }, [endType, timer]);
 
     useEffect(() => {

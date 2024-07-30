@@ -1,0 +1,40 @@
+.image {
+    width: 100%;
+    height: 100%;
+    border-radius: 7px;
+    box-sizing: border-box;
+    position: relative;
+    cursor: pointer;
+    max-width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
+
+    img {
+        height: 100%;
+        width: 100%;
+        border-radius: 7px;
+       
+    }
+
+   
+}
+
+.image_overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    /* top: 4px;
+    left: 6px; */
+  /*   filter: blur(2px); */
+    opacity: 0.8;
+    img {
+     
+    }
+}
+
+.caption {
+    padding: 7px 0 5px 6px;
+    font-size: 14px;
+}

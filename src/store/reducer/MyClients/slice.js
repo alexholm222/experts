@@ -5,9 +5,15 @@ const initialState = {
     todayNum: 0,
     todayNextPage: '',
     new: [],
-    no_task: [],
+    newNum: 0,
+    newNextPage: '',
+    noTask: [],
+    noTaskNum: 0,
+    noTaskNextPage: '',
     archive: [],
     plan_meeting: [],
+    planNum: 0,
+    planNextPage: '',
     zoom: [],
     anketa: [],
     contract: [],
@@ -33,6 +39,9 @@ const MyClientsSlice = createSlice({
         setClientsToday(state, action) {
             state.today = action.payload;
         },
+        setClientsTodayAdd(state, action) {
+            state.today = [...state.today, ...action.payload];
+        },
 
         setClientsNum(state, action) {
             state.todayNum = action.payload;
@@ -43,11 +52,35 @@ const MyClientsSlice = createSlice({
         },
 
         setClientsNew(state, action) {
-            state.new = action.payload /* [...state.new, ...action.payload] */;
+            state.new = action.payload;
+        },
+
+        setClientsNewAdd(state, action) {
+            state.new = [...state.new, ...action.payload];
+        },
+
+        setClientsNewNum(state, action) {
+            state.newNum = action.payload;
+        },
+
+        setNewNextPage(state, action) {
+            state.newNextPage = action.payload;
         },
 
         setClientsNoTask(state, action) {
-            state.no_task = action.payload /* [...state.no_task, ...action.payload] */;
+            state.noTask = action.payload;
+        },
+
+        setClientsNoTaskAdd(state, action) {
+            state.noTask = [...state.noTask, ...action.payload];
+        },
+
+        setClientsNoTaskNum(state, action) {
+            state.noTaskNum = action.payload;
+        }, 
+
+        setNoTaskNextPage(state, action) {
+            state.noTaskNextPage = action.payload;
         },
 
         setClientsArchive(state, action) {
@@ -55,7 +88,19 @@ const MyClientsSlice = createSlice({
         },
 
         setPlanMeeting(state, action) {
-            state.plan_meeting = action.payload /* [...state.plan_meeting, ...action.payload] */;
+            state.plan_meeting = action.payload;
+        },
+
+        setPlanMeetingAdd(state, action) {
+            state.plan_meeting = [...state.plan_meeting, ...action.payload];
+        },
+
+        setPlanNum(state, action) {
+            state.planNum = action.payload;
+        },
+
+        setPlanNextPage(state, action) {
+            state.planNextPage = action.payload;
         },
 
         setZoom(state, action) {
@@ -134,13 +179,23 @@ const MyClientsSlice = createSlice({
 
 export const {
     setClientsToday,
+    setClientsTodayAdd,
     setClientsNum,
+    setClientsNewAdd,
     setTodayNextPage,
     setLoadNew,
     setClientsNew,
+    setClientsNewNum,
+    setNewNextPage,
     setClientsNoTask,
+    setClientsNoTaskAdd,
+    setClientsNoTaskNum,
+    setNoTaskNextPage,
     setClientsArchive,
     setPlanMeeting,
+    setPlanMeetingAdd,
+    setPlanNum,
+    setPlanNextPage,
     setZoom,
     setAnketa,
     setContract,

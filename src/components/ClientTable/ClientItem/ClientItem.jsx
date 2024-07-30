@@ -1,12 +1,15 @@
 import s from './ClientItem.module.scss';
 import { ReactComponent as IconComment } from '../../../image/clients/iconComment.svg';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactComponent as IconStar } from '../../../image/work/IconStar.svg';
 import { ReactComponent as IconStarActive } from '../../../image/work/IconStarActive.svg';
 import { ReactComponent as IconZoomSmall } from '../../../image/clients/iconZoomSmall.svg';
 import { ReactComponent as IconMissingCall } from '../../../image/clients/iconMissingCall.svg';
-import { useNavigate  } from 'react-router-dom';
+import { ReactComponent as Attention } from '../../../image/clients/attention.svg';
+import { ReactComponent as IconWhatsapp } from '../../../image/clients/iconWhatsapp.svg';
+import iconWhatsapp from '../../../image/clients/iconWhatsapp.gif';
+import { useNavigate, Link } from 'react-router-dom';
 //utils
 import { handleTaskTime, handleDateDifference } from '../../../utils/dates';
 import { addSpaceNumber } from '../../../utils/addSpaceNumber';
@@ -20,16 +23,23 @@ import {
     setUpdateNoFavorites,
     setDeleteUpdateNoFavorites
 } from '../../../store/reducer/Updater/slice';
+import { setNotification } from '../../../store/reducer/Messenger/slice';
 import { setClientId } from '../../../store/reducer/Client/slice';
 //selector
 import { selectorUpdater } from '../../../store/reducer/Updater/selector';
 import { selectorClient } from '../../../store/reducer/Client/selector';
 import { selectorApp } from '../../../store/reducer/App/selector';
+import { selectorWork } from '../../../store/reducer/Work/selector';
+import { selectorMessenger } from '../../../store/reducer/Messenger/selector';
+//utils
+import { handleTimeForCity } from '../../../utils/dates';
 
 
-const ClientItem = ({ client, id }) => {
+const ClientItem = ({ client, id, activeTabList }) => {
     const client_id = useSelector(selectorClient).client_id;
     const disabledMyClients = useSelector(selectorApp).disabledMyClients;
+    const messageFromSocket = useSelector(selectorMessenger).notification;
+    const cities = useSelector(selectorWork).cities;
     const [anim, setAnim] = useState(false);
     const [tooltip, setTooltip] = useState(false);
     const [favorite, setFavorite] = useState(false);
@@ -38,7 +48,11 @@ const ClientItem = ({ client, id }) => {
     const [lastComment, setLastComment] = useState('');
     const [status, setStatus] = useState(0);
     const [statusText, setStatusText] = useState('');
-    const [missedCall, setMissedCall] = useState(false);
+    const [missedCall, setMissedCall] = useState(client.events_call !== 0 ? true : false);
+    const [reqCall, setReqCall] = useState(client.is_call_me !== 0 ? true : false);
+    const [newMessage, setNewMessage] = useState(client.is_new_msg !== 0 ? true : false)
+    const [city, setCity] = useState(client.city || '');
+    const [time, setTime] = useState('');
     const dispatch = useDispatch();
     const updater = useSelector(selectorUpdater);
     const navigate = useNavigate();
@@ -51,21 +65,52 @@ const ClientItem = ({ client, id }) => {
     //REJECT (-1): - Отправлен в отказ (-1) ClientStatusReject
 
     useEffect(() => {
+        setAnim(false)
         setTimeout(() => {
             setAnim(true)
         })
-    }, []);
+    }, [activeTabList]);
 
     useEffect(() => {
-        if (client.events_call == 1) {
-            setMissedCall(true)
-        } else {
+        const cityRight = client.city == '' ? client.city_auto : client.city;
+        setCity(cityRight);
+        handleSetTimeZone();
+        let timerId = setInterval(() => handleSetTimeZone(), 30000);
+
+        return () => clearInterval(timerId);
+    }, [client, cities]);
+
+
+
+    useEffect(() => {
+        if (client.events_call == 0 || reqCall) {
             setMissedCall(false)
+        } else {
+            setMissedCall(true)
         }
     }, [client])
 
     useEffect(() => {
-        const comment = client.partnership_client_logs?.filter(el => el.is_manual == 1 && el.type !== 'newsletter_action').at(-1)?.comment;
+        if (client.is_call_me == 0) {
+            setReqCall(false)
+        } else {
+            setReqCall(true)
+        }
+    }, [client])
+
+    useEffect(() => {
+        if (client.is_new_msg == 1) {
+            setNewMessage(true)
+        } else {
+            setNewMessage(false)
+        }
+    }, [client])
+
+
+
+
+    useEffect(() => {
+        const comment = client.partnership_client_logs?.filter(el => el.is_manual == 1 && el.person_id !== 0 && el.comment !== '' && el.newsletter_id == 0 && el.is_sms == 0).at(-1)?.comment;
         comment && setLastComment(comment)
     }, [client])
 
@@ -77,6 +122,7 @@ const ClientItem = ({ client, id }) => {
             el.type == 'ClientContractSign' || el.type == 'ClientPrepaid');
         const lastRoad = cleanRoad?.at(-1);
         setLastRoadDate(lastRoad?.date);
+
 
         if (lastRoad?.type == 'ClientOpenPlan') {
             setStatus(1);
@@ -108,9 +154,15 @@ const ClientItem = ({ client, id }) => {
             return
         }
 
-        if (lastRoad?.type == 'SendForm') {
+        if (lastRoad?.type == 'SendForm' && cleanRoad[0].type !== 'ClientAnketaAccept') {
             setStatus(4.1);
             setStatusText('Проверь анкету клиента');
+            return
+        }
+
+        if (lastRoad?.type == 'SendForm' && cleanRoad[0].type == 'ClientAnketaAccept') {
+            setStatus(4.3);
+            setStatusText('Анкета кандидата');
             return
         }
 
@@ -178,6 +230,21 @@ const ClientItem = ({ client, id }) => {
         }
     }, [client])
 
+    useEffect(() => {
+        if (messageFromSocket?.client?.id) {
+            messageFromSocket?.client?.id == id && setNewMessage(true)
+            return
+        }
+    }, [messageFromSocket])
+
+    const handleSetTimeZone = () => {
+        const timeZone = cities?.find(el => el.name == city)?.time_zone;
+        if (cities.length > 0 && timeZone !== 3) {
+            setTime(handleTimeForCity(timeZone));
+            return
+        }
+    }
+
     const handleOpenTooltip = () => {
         setTooltip(true)
     }
@@ -224,9 +291,9 @@ const ClientItem = ({ client, id }) => {
     }
 
     const handleOpenClient = () => {
-        dispatch(setClientId(id));
-        localStorage.setItem('client_id', JSON.stringify(id));
-        navigate(`/experts/work`); 
+        /*  dispatch(setClientId(id)); */
+        /*  navigate(`/experts/work/client=${id}`); */
+        messageFromSocket?.client?.id == id && dispatch(setNotification({}))
         if (client_id !== id) {
             localStorage.removeItem('widget');
             localStorage.removeItem('prevWidget');
@@ -239,30 +306,40 @@ const ClientItem = ({ client, id }) => {
     }
 
     return (
-        <div id={id} onMouseEnter={handleViewFavorite} onMouseLeave={handleHidenFavorite} className={`${s.item} ${disabledMyClients && s.item_disabled} ${anim && s.item_anim} ${missedCall && s.item_attention}`}>
-         
-                <div onClick={handleOpenClient} className={s.empty}>
-                    {missedCall && <IconMissingCall />}
-                </div>
-           
 
-           
-                <div onClick={handleOpenClient} className={s.client}>
-                    <p>{client.name}</p> <span>{client.city == '' ? client.city_auto : client.city}</span>
+        <div id={id} onMouseEnter={handleViewFavorite} onMouseLeave={handleHidenFavorite} className={`${s.item} ${anim && s.item_anim} ${(reqCall || newMessage) && s.item_req} ${missedCall && s.item_attention}`}>
+            <Link onClick={handleOpenClient} to={`/experts/work/client=${id}`}>
+                <div className={s.empty}>
+                    {newMessage && <IconWhatsapp />}
+                    {missedCall && !newMessage && <IconMissingCall />}
+                    {reqCall && !newMessage && <Attention />}
+
                 </div>
-        
-                <div onClick={handleOpenClient} className={s.task}>
+            </Link>
+
+            <Link onClick={handleOpenClient} to={`/experts/work/client=${id}`}>
+                <div className={s.client}>
+                    <p>{client.name}</p> <span>{city}<sup> {time}</sup></span>
+                </div>
+            </Link>
+
+            <Link onClick={handleOpenClient} to={`/experts/work/client=${id}`}>
+                <div className={s.task}>
                     <p>{handleTaskTime(client.next_connect)}</p>
-                    {client.next_connect == client.zoom_date && <div className={s.zoom}>
+                    {client.next_connect == client.zoom_date && client.next_connect !== '0000-00-00 00:00:00' && <div className={s.zoom}>
                         <IconZoomSmall />
                     </div>}
                 </div>
-         
-                <div onClick={handleOpenClient} className={s.task}>
+            </Link>
+
+            <Link onClick={handleOpenClient} to={`/experts/work/client=${id}`}>
+                <div className={s.task}>
                     <p>{handleDateDifference(client.last_connect)}</p> <span></span>
                 </div>
-        
-                <div onClick={handleOpenClient} className={s.step}>
+            </Link>
+
+            <Link onClick={handleOpenClient} to={`/experts/work/client=${id}`}>
+                <div className={s.step}>
                     <div className={s.bars}>
                         <div className={`${s.bar} ${status == 2.1 && s.bar_yellow} ${status >= 2.2 && s.bar_green}`}></div>
                         <div className={`${s.bar}  ${status >= 3.2 && s.bar_green}`}></div>
@@ -278,26 +355,27 @@ const ClientItem = ({ client, id }) => {
                     </div>
 
                 </div>
-           
+            </Link>
 
-            <div onClick={handleOpenClient} className={s.comment} onMouseEnter={handleOpenTooltip} onMouseLeave={handleCloseTooltip}>
-                {lastComment !== '' && <IconComment />}
-                <p className={s.text}>{lastComment}</p>
-                {lastComment.length > 55 && <div className={`${s.tooltip} ${tooltip && s.tooltip_open}`}>
-                    <p>{lastComment}</p>
-                    <div></div>
+            <Link onClick={handleOpenClient} to={`/experts/work/client=${id}`}>
+                <div className={s.comment} onMouseEnter={handleOpenTooltip} onMouseLeave={handleCloseTooltip}>
+                    {lastComment !== '' && <IconComment />}
+                    <p className={s.text}>{lastComment}</p>
+                    {lastComment.length > 55 && <div className={`${s.tooltip} ${tooltip && s.tooltip_open}`}>
+                        <p>{lastComment}</p>
+                        <div></div>
+                    </div>
+                    }
                 </div>
-                }
-            </div>
-
-
+            </Link>
 
             <div className={`${s.favorite} ${!viewFavorite && !favorite && s.favorite_hiden}`}>
                 <IconStar onClick={handleFavorite} className={`${s.icon} ${!favorite && s.icon_active}`} />
                 <IconStarActive onClick={handleFavorite} className={`${s.icon_2} ${favorite && s.icon_active}`} />
             </div>
-        </div >
+        </div>
+
     )
 };
 
-export default ClientItem;
+export default memo(ClientItem);

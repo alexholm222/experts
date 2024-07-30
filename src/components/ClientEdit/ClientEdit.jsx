@@ -7,6 +7,7 @@ import { ReactComponent as IconPlus } from '../../image/work/iconPlus.svg';
 import { editClient } from '../../Api/Api';
 //slice 
 import { setNumbersDefault, setNumbers, setButtonHiden, setClientCity, setClientUpdate } from '../../store/reducer/Client/slice';
+import { setWorkInfoUpdate } from '../../store/reducer/Work/slice';
 //selector
 import { selectorClient } from '../../store/reducer/Client/selector';
 import { selectorWork } from '../../store/reducer/Work/selector';
@@ -18,7 +19,7 @@ import LoaderButton from '../LoaderButton/LoaderButton';
 
 const ClientEdit = ({ handleOpenList, openList, setOpenList, setEditOpen, stage }) => {
     const buttonAddHiden = useSelector(selectorClient).buttonHiden;
-    const client_numbers = useSelector(selectorClient).client_numbers;
+    const client_numbers = useSelector(selectorClient)?.client_numbers;
     const client_main_number = useSelector(selectorClient).client_main_number;
     const client_city = useSelector(selectorClient).client_city;
     const client_id = useSelector(selectorClient).client_id;
@@ -30,10 +31,12 @@ const ClientEdit = ({ handleOpenList, openList, setOpenList, setEditOpen, stage 
     const [heightList, setHeightList] = useState(0);
     const [scrollList, setScrollList] = useState(false);
     const [selectTel, setSelectTel] = useState(1);
+    const [error, setError] = useState('');
     const [load, setLoad] = useState(false);
     const listRef = useRef();
     const buttonRef = useRef();
     const dispatch = useDispatch();
+    console.log(client_numbers) /* +7 (987)-380-06-73  Елена Витулева    */
 
 
     useEffect(() => {
@@ -72,6 +75,7 @@ const ClientEdit = ({ handleOpenList, openList, setOpenList, setEditOpen, stage 
 
 
 
+
     const handleAddInput = () => {
         dispatch(setNumbers(''))
         dispatch(setButtonHiden(true))
@@ -98,9 +102,11 @@ const ClientEdit = ({ handleOpenList, openList, setOpenList, setEditOpen, stage 
         setOpenList(false);
     }
 
+    console.log(client_numbers)
+
     const handleSave = () => {
         const phones = client_numbers.filter(el => el !== client_main_number);
-        console.log(phones)
+    
         setLoad(true)
         const data = {
             id: client_id,
@@ -111,20 +117,28 @@ const ClientEdit = ({ handleOpenList, openList, setOpenList, setEditOpen, stage 
             phone2: phones[0] ? phones[0] : '',
             phone3: phones[1] ? phones[1] : '',
         }
+
         console.log(data)
         editClient(data)
             .then(res => {
-                console.log(res);
-
                 setTimeout(() => {
                     setLoad(false);
                 }, 200)
 
                 setTimeout(() => {
+                    dispatch(setWorkInfoUpdate());
                     setEditOpen(false);
                 }, 400)
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                setTimeout(() => {
+                    setLoad(false);
+                }, 200)
+                const data = err.response?.data;
+                const text = data.error == 'Phone number already exists' ? 'Телефон уже зарегистрированный в базе' : 'Ошибка'
+                setError(text);
+                
+            })
         dispatch(setClientCity(valueCity));
     }
 
@@ -147,15 +161,16 @@ const ClientEdit = ({ handleOpenList, openList, setOpenList, setEditOpen, stage 
             </div>
 
 
-            <p className={s.sub}>Номер телефона для чата</p>
+            <p className={s.sub}>Номера клиента</p>
             <div className={s.listTel}>
                 {client_numbers.map((el, index) => {
-                    return <InputTel key={index} id={index + 1} el={el} setSelectTel={setSelectTel} selectTel={selectTel} />
+                    return <InputTel key={index} id={index + 1} el={el} setSelectTel={setSelectTel} selectTel={selectTel} phones={client_numbers} handleSave={handleSave}/>
                 })}
             </div>
 
-           {/*  <button onClick={handleAddInput} className={`${s.button} ${s.button_add} ${buttonAddHiden && s.button_hiden}`}><IconPlus />Номер телефона</button> */}
-            <button style={{marginTop: '20px'}} onClick={handleSave} className={`${s.button} ${s.button_save}`}><p>Сохранить и закрыть</p> {load && <LoaderButton color={'#ffff'} />}</button>
+            <button onClick={handleAddInput} className={`${s.button} ${s.button_add} ${buttonAddHiden && s.button_hiden}`}><IconPlus />Номер телефона</button>
+            <span className={s.error}>{error}</span>
+            <button onClick={handleSave} className={`${s.button} ${s.button_save}`}><p>Сохранить и закрыть</p> {load && <LoaderButton color={'#ffff'} />}</button>
         </div>
     )
 };

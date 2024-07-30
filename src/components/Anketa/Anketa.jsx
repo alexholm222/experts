@@ -19,11 +19,12 @@ const Anketa = () => {
     const [modalConfirm, setModalConfirm] = useState(false);
     const [confirmType, setConfirmType] = useState('');
     const [newAnketaState, setNewAnketaState] = useState('');
-    const anketa = useSelector(selectorWork).anketaForm;
+    const anketa = useSelector(selectorWork)?.anketaForm;
     const stageRoad = useSelector(selectorClient).stage;
-    const answers = JSON.parse(anketa.answers)[0];
+    const answers = JSON.parse(anketa?.answers)[0];
     const dispatch = useDispatch();
     const modalRef = useRef();
+    console.log(anketa, answers)
 
 
     useEffect(() => {
@@ -218,7 +219,7 @@ const Anketa = () => {
                         }
 
 
-                        {answers['Расскажите о вашей карьере за последние 5 лет'].length > 0 && <div className={s.block}>
+                        {answers['Расскажите о вашей карьере за последние 5 лет']?.length > 0 && <div className={s.block}>
                             <span>Расскажите о вашей карьере за последние 5 лет</span>
                             <p>{answers['Расскажите о вашей карьере за последние 5 лет']}</p>
                         </div>

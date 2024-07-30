@@ -1,5 +1,5 @@
 import s from './Clients.module.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 //components
 import ClientsList from '../ClientsList/ClientsList';
@@ -13,9 +13,13 @@ import { selectorPlaner } from '../../store/reducer/Planer/selector';
 import {
     setClientsToday,
     setClientsNum,
+    setClientsNewNum,
     setTodayNextPage,
+    setNewNextPage,
     setClientsNew,
     setClientsNoTask,
+    setClientsNoTaskNum,
+    setNoTaskNextPage,
     setClientsArchive,
     setPlanMeeting,
     setZoom,
@@ -32,43 +36,32 @@ import {
     setLoadAnketa,
     setLoadContract,
     setLoadPrepaid,
-    setLoadFavorite
+    setLoadFavorite,
+    setPlanNum,
+    setPlanNextPage,
 } from '../../store/reducer/MyClients/slice';
 //slice
-import { setPlaner, setPlanerLoad } from '../../store/reducer/Planer/slice';
 
 const Clients = () => {
     const [anim, setAnim] = useState(false);
-    const [loadClose, setLoadClose] = useState(true);
-    const [loadVisible, setLoadVisible] = useState(true);
     const [activeTab, setActiveTab] = useState(2);
-  /*   const [planerLoader, setPlanerLoader] = useState(false); */
     const loadPage = useSelector(selectorApp).loadPage;
     const loadClient = useSelector(selectorApp).loadClient;
- /*    const planerLoad = useSelector(selectorPlaner).planerLoad; */
+    /*    const planerLoad = useSelector(selectorPlaner).planerLoad; */
     const dispatch = useDispatch();
+    
     //получение списка моих клиентов
 
-    useEffect(() => {
+    useMemo(() => {
         getMyClients('today', 'default')
             .then(res => {
-                const clients = res.data.data;
-                const clientsNum = res.data.total;
-                const newClients = [...clients];
-                newClients.sort(function (a, b) {
-                    const dateA = new Date(a?.next_connect);
-                    const dateB = new Date(b?.next_connect);
-                    if (dateA > dateB) {
-                        return 1
-                    }
-
-                    if (dateA < dateB) {
-                        return -1
-                    }
-                })
-                dispatch(setClientsToday(newClients));
+                console.log(res)
+                const clients = res.data.data.data;
+                const clientsNum = res.data.data.total;
+                dispatch(setClientsToday(clients));
                 dispatch(setClientsNum(clientsNum));
-                dispatch(setTodayNextPage(res.data.next_page_url))
+                dispatch(setTodayNextPage(res.data.data.next_page_url))
+
                 setTimeout(() => {
                     dispatch(setLoadToday());
                 }, 100)
@@ -77,11 +70,15 @@ const Clients = () => {
 
         getMyClients('new', 'default')
             .then(res => {
-                const clients = res.data.data;
+                const clients = res.data.data.data;
+                const clientsNum = res.data.data.total;
+                 console.log(res)
                 dispatch(setClientsNew(clients));
+                dispatch(setClientsNewNum(clientsNum));
+                dispatch(setNewNextPage(res.data.data.next_page_url))
                 setTimeout(() => {
                     dispatch(setLoadNew());
-                }, 100)
+                })
             })
             .catch(err => console.log(err));
 
@@ -90,11 +87,11 @@ const Clients = () => {
     useEffect(() => {
         getMyClients('favorite', 'default')
             .then(res => {
-                const clients = res.data.data;
+                const clients = res.data.data.data;
                 dispatch(setFavorite(clients));
                 setTimeout(() => {
                     dispatch(setLoadFavorite());
-                }, 100)
+                })
             })
             .catch(err => console.log(err))
     }, [])
@@ -102,89 +99,91 @@ const Clients = () => {
     useEffect(() => {
         getMyClients('no_tasks', 'default')
             .then(res => {
-                const clients = res.data.data;
+                const clients = res.data.data.data;
+                const clientsNum = res.data.data.total;
+                console.log('клиенты', res)
                 dispatch(setClientsNoTask(clients));
+                dispatch(setClientsNoTaskNum(clientsNum));
+                dispatch(setNoTaskNextPage(res.data.data.next_page_url))
                 setTimeout(() => {
                     dispatch(setLoadNoTask());
-                }, 100)
+                })
             })
             .catch(err => console.log(err))
 
         getMyClients('archive', 'default')
             .then(res => {
-                const clients = res.data.data;
+                const clients = res.data.data.data;
+                const clientsNum = res.data.data.total;
                 dispatch(setClientsArchive(clients));
+                dispatch(setClientsNewNum(clientsNum));
+                dispatch(setNewNextPage(res.data.data.next_page_url))
                 setTimeout(() => {
                     dispatch(setLoadArchive());
-                }, 100)
+                })
             })
             .catch(err => console.log(err))
 
         getMyClients('plan_meeting', 'default')
             .then(res => {
-                const clients = res.data.data;
-                dispatch(setPlanMeeting(clients));
+                console.log('планирование ')
+                const clients = res.data.data.data;
+                const clientsNum = res.data.data.total;
+                    dispatch(setPlanMeeting(clients));
+                    dispatch(setPlanNum(clientsNum));
+                    dispatch(setPlanNextPage(res.data.data.next_page_url))
                 setTimeout(() => {
                     dispatch(setLoadPlanMeeting());
-                }, 100)
+                })
             })
             .catch(err => console.log(err));
 
         getMyClients('zoom', 'default')
             .then(res => {
-                const clients = res.data.data;
+                const clients = res.data.data.data;
                 dispatch(setZoom(clients));
                 dispatch(setLoadZoom());
                 setTimeout(() => {
                     dispatch(setLoadZoom());
-                }, 100)
+                })
             })
             .catch(err => console.log(err))
 
         getMyClients('anketa', 'default')
             .then(res => {
-                const clients = res.data.data;
+                const clients = res.data.data.data;
                 console.log(clients)
                 dispatch(setAnketa(clients));
                 setTimeout(() => {
                     dispatch(setLoadAnketa());
-                }, 100)
+                })
             })
             .catch(err => console.log(err))
 
         getMyClients('contract', 'default')
             .then(res => {
-                const clients = res.data.data;
+                const clients = res.data.data.data;
                 dispatch(setContract(clients));
                 setTimeout(() => {
                     dispatch(setLoadContract());
-                }, 100)
+                })
             })
             .catch(err => console.log(err))
 
         getMyClients('prepaid', 'default')
             .then(res => {
-                const clients = res.data.data;
+                const clients = res.data.data.data;
                 dispatch(setPrepaid(clients));
                 setTimeout(() => {
                     dispatch(setLoadPrepaid());
-                }, 100)
+                })
             })
             .catch(err => console.log(err))
     }, []);
 
-   
+
     //Лоадер инфо о клиенте
-    useEffect(() => {
-        if (!loadPage && !loadClient) {
-            setLoadVisible(false)
-            setTimeout(() => {
-                setLoadClose(false)
-            }, 150)
-        } else {
-            setLoadClose(true)
-        }
-    }, [loadPage, loadClient])
+  
 
     useEffect(() => {
         setTimeout(() => {
@@ -196,14 +195,8 @@ const Clients = () => {
     useEffect(() => {
         setTimeout(() => {
             setAnim(true)
-        }, 100)
+        })
     }, []);
-
-  /*   useEffect(() => {
-        planerLoad ? setPlanerLoader(true) : setTimeout(() => {
-            setPlanerLoader(false)
-        }, 150)
-    }, [planerLoad]) */
 
     const handleActiveTab = (e) => {
         const id = e.currentTarget.id;
@@ -215,10 +208,6 @@ const Clients = () => {
             <div className={s.header}>
                 <h2 className={s.title}>Мои клиенты</h2>
                 <div className={s.tabs}>
-                   {/*  <div onClick={handleActiveTab} id='1' className={`${s.tab} ${activeTab == 1 && s.tab_active}`}>
-                        <p>Планер</p>
-                    </div> */}
-
                     <div onClick={handleActiveTab} id='2' className={`${s.tab} ${activeTab == 2 && s.tab_active}`}>
                         <p>Клиенты</p>
                     </div>
@@ -229,8 +218,6 @@ const Clients = () => {
                 </div>
             </div>
             {(activeTab == 2 || activeTab == 3) && <ClientsList activeTab={activeTab} />}
-            {/* {activeTab == 1 && <Planer />} */}
-            {/* {activeTab == 1 && planerLoader && <PlanerSceleton load={planerLoad} />} */}
         </div>
     )
 };

@@ -136,7 +136,7 @@ const WidgetWorkZoom = ({ setWidget, setPrevWidget, setPlanWithoutCall }) => {
 
             <div className={s.container}>
                 <button onClick={handleCancelZoom} className={s.button_small}><p>Клиент отказался</p> <IconCancel /></button>
-                <button onClick={handleHandOver} className={s.button_small}><p>Передать клиента</p> <IconPersonAdding /></button>
+              {/*   <button onClick={handleHandOver} className={s.button_small}><p>Передать клиента</p> <IconPersonAdding /></button> */}
             </div>
         </div>
     )

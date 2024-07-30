@@ -1,7 +1,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    max-height: 82px;
+    max-height: 74px;
     /*  padding: 20px; */
     box-sizing: border-box;
     height: max-content;
@@ -11,7 +11,7 @@
     overflow: hidden;
 
     &_open {
-        max-height: 600px;
+        max-height: 740px;
     }
 
 }
@@ -22,7 +22,7 @@
     gap: 12px;
     position: relative;
     cursor: pointer;
-    padding: 20px;
+    padding: 16px;
 }
 
 .logo {
@@ -35,8 +35,8 @@
     }
 
     &_2 {
-        height: auto;
-        width: 90px;
+       width: auto;
+       height: auto;
 
         display: flex;
         align-items: center;
@@ -44,7 +44,7 @@
         cursor: pointer;
 
         img {
-            height: 90px;
+            height: 70px;
             width: auto;
         }
     }
@@ -76,8 +76,8 @@
     width: 20px;
     height: 20px;
     position: absolute;
-    right: 20px;
-    top: 31px;
+    right: 16px;
+    top: 26px;
     transform: rotate(-90deg);
     transition: all 0.4s;
 
@@ -148,6 +148,11 @@
     line-height: 22px
 }
 
+.text_small {
+    font-size: 14px;
+    line-height: 18px;
+}
+
 .photo {
     height: 76px;
     width: 76px;
@@ -196,6 +201,11 @@
     box-shadow: var(--box-shadow2);
     font-size: 14px;
     color: var(--color-text-secondary);
+
+    &_2 {
+        top: 4px;
+        left: 60px;
+    }
 
     &_open {
         opacity: 1;

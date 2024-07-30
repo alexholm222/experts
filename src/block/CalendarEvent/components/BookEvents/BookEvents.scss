@@ -1,0 +1,259 @@
+.bookevent {
+    font-family: Raleway;
+    color: #121922;
+    width: 100%;
+    padding: 20px 24px;
+    font-weight: 400;
+    line-height: 120%;  
+   
+    &__main {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;    
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 100%;
+    }
+
+    &__title {
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 30px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    &__title_success {
+        color: #002CFB;
+        width: 336px;
+    }
+
+    &__title_error {
+        color: #E10D0D;
+        
+    }
+
+    &__description {
+      color: #8E9AA8;
+      font-family: Inter;
+      font-size: 16px;
+      margin-bottom: 24px;
+    }
+
+    &__container_input {
+        display: flex;
+        margin-bottom: 8px;
+    }
+
+    &__input {
+        width: 260px;
+        height: 48px;
+        background-color: #F1F4F9;
+        border-radius: 4px;
+        border: none;
+        padding: 13px;
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 130%;
+        color: initial;
+    }
+
+    &__input::placeholder {
+        color: #8E9AA8;
+    }
+
+    &__button_add {
+        width: 50px;
+        height: 48px;
+        object-fit: contain;
+        margin-left: 14px;
+        cursor: pointer;
+    }
+
+    &__button_disabled {
+      cursor:auto;
+    }
+
+   
+
+    &__button_add:hover svg path {
+        transition: all 0.2s;
+    }
+    &__button_add:hover svg rect {
+        transition: all 0.2s;
+    }
+
+    &__button_add:hover svg path {
+      fill-opacity: 1;
+    }
+
+    &__button_add:hover svg rect {
+        stroke-opacity: 1;
+    }
+
+    &__button_disabled:hover svg path {
+        fill-opacity: 0.4;
+      }
+  
+      &__button_disabled:hover svg rect {
+          stroke-opacity: 0.4;
+      }
+
+    &__button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 248px;
+        height: 48px;
+        background-color: #002CFB;
+        border-radius: 4px;
+        font-family: Raleway;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 48px;
+        color: #ffff;
+        cursor: pointer;
+        position: relative;
+    }
+
+    &__button:disabled {
+        background-color: rgba(179, 178, 178, 0.406);
+        cursor: auto;
+    }
+
+    &__button:disabled:hover {
+        background-color: rgba(179, 178, 178, 0.406);
+    }
+
+    &__button:disabled:active {
+        background-color: rgba(179, 178, 178, 0.406);
+    }
+
+    &__button-overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    &__button {
+        transition: all 0.2s;
+     }
+
+     &__button:hover {
+        background-color: #0024cb;
+     }
+
+    &__arrow {
+        display: flex;
+        align-items: center;
+        margin-left: 15px;
+    }
+
+    &__price {
+        font-family: Inter;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 120%;
+        margin-bottom: 12px;
+        color: #2E3C4E;
+    }
+
+    &__places {
+        font-family: Inter;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 120%;
+        color: #8E9AA8;
+    }
+
+    &__icon_time {
+        display: flex;
+        width: 23px;
+        height: 23px;
+        background-image: url(../../../public/static_calendar/icons/iconTime.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+        margin-right: 10px;
+    }
+
+    &__icon_success {
+        display: flex;
+        width: 26px;
+        height: 26px;
+        background-image: url(../../../public/static_calendar/icons/iconSuccess.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+        margin-right: 10px;
+    }
+
+    &__icon_error {
+        display: flex;
+        width: 23px;
+        height: 20px;
+        background-image: url(../../../public/static_calendar/icons/iconError.svg);
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin-right: 10px;
+    }
+
+    &__container_success {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    
+}
+
+
+
+.cat_1 {
+	&::before {
+		background: #009953;
+	}
+}
+
+.cat_2 {
+	&::before {
+		background: #0f1324;
+	}
+}
+
+.cat_3 {
+	&::before {
+		background: #f89500;
+	}
+}
+
+.cat_4 {
+	&::before {
+		background: #ff0041;
+	}
+}
+
+.cat_5 {
+	&::before {
+		background: #a033ff;
+	}
+}
+
+.cat_6 {
+	background: rgba(212, 223, 243, 0.17);
+	color: rgba(173, 191, 223, 0.4);
+
+	&::before {
+		background: rgba(173, 191, 223, 0.4);
+	}
+}

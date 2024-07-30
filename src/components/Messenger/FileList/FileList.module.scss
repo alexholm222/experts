@@ -1,0 +1,214 @@
+.files {
+    position: absolute;
+    background-color: var(--color-bg);
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-in-out;
+    transform: scale(0);
+
+    &_open {
+        visibility: visible;
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    textarea {
+        width: 80%;
+        box-sizing: border-box;
+        outline: none;
+        border: none;
+        padding: 10px 12px;
+        min-height: 12px;
+        font-weight: 400;
+        line-height: 100%;
+        border-radius: 4px;
+        resize: none;
+        /*  padding-bottom: -30px; */
+        color: var(--color-text-primary);
+        background-color: var(--color-bg-card);
+        font-size: 14px;
+
+
+        &::placeholder {
+            color: var(--color-button-disabled);
+        }
+    }
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: space-between; */
+    height: 420px;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.block {
+    height: 80%;
+    width: 100%;
+    max-height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto 0;
+
+    &_bottom {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        border-top: 1px solid rgba(142, 142, 164, 0.263);
+        margin-top: 12px;
+    }
+}
+
+.list {
+    height: 80px;
+    width: 100%;
+    padding-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.image {
+    max-height: 80%;
+    height: 100%;
+    max-width: 90%;
+    display: flex;
+    align-items: center;
+
+    img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    &_small {
+        width: 62px;
+        height: 62px;
+        border: 1px solid rgba(142, 142, 164, 0.263);
+        border-radius: 4px;
+        object-fit: cover;
+        overflow: hidden;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+        padding: 4px;
+
+        &_active {
+            border: 2px solid var(--color-button-accent);
+            pointer-events: none;
+        }
+
+        &:hover {
+            filter: brightness(0.9);
+        }
+
+        img {
+            transition: all 0.15s;
+            /*  width: auto;
+            height: auto; */
+            /*  max-width: 100%; */
+            max-height: 78px;
+        }
+
+        &_file {
+            padding: 12px;
+
+            img {
+                max-height: 36px;
+            }
+        }
+    }
+}
+
+.button {
+
+
+    &_send {
+        height: 41px;
+        width: 41px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border-radius: 4px;
+        background-color: #002CFB;
+        transition: all 0.15s ease-in-out;
+        margin-left: auto;
+        cursor: pointer;
+        margin-top: 12px;
+
+        img {
+            transition: all 0.15s ease-in-out;
+            transform: scale(1);
+        }
+
+        &:hover {
+            background-color: #0028E5;
+
+            img {
+                transform: translateX(4px);
+            }
+        }
+
+        &:active {
+            background-color: #0028E5;
+
+            img {
+                transform: translateX(4px);
+            }
+        }
+    }
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+.icon {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        width: auto;
+        height: 56px;
+    }
+
+    span {
+        font-size: 14px;
+    }
+}

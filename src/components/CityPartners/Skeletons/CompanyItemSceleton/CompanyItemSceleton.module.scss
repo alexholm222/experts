@@ -1,0 +1,55 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    max-height: 74px;
+    /*  padding: 20px; */
+    box-sizing: border-box;
+    height: max-content;
+    background-color: var(--color-bg-daily);
+    border-radius: 6px;
+    transition: all 0.2s;
+    overflow: hidden;
+
+    &_hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    padding: 16px;
+}
+
+.logo {
+    width: 92px;
+    height: 42px;
+}
+
+.adress {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-weight: 400;
+
+    &_city {
+        height: 14px;
+        width: 300px;
+    }
+
+    &_time {
+        width: 170px;
+        height: 12px;
+    }
+}
+
+.arrow {
+    width: 20px;
+    height: 20px;
+    margin-left: auto;
+    
+}
